@@ -1,0 +1,230 @@
+id,floor,x,y,name,type
+room_gf_151,G,175.64575,236.30997,Washroom (PYP 2 Corridor),room
+room_gf_152,G,436.75278,237.34317,Washroom (PYP 1 Corridor),room
+room_gf_153,G,428.9299,146.71587,Washroom (MYP 1 Corridor),room
+room_gf_158,G,435.71954,378.4502,Washroom (KG 1 Corridor),room
+room_gf_159,G,174.31734,379.04059,Washroom (KG 2 Corridor),room
+stair_gf_1,G,195.42436,154.68636,Staircase 1 (PYP 3 Corridor),stair
+stair_gf_4,G,333.87454,263.02582,Staircase 4 (Quadrangle Right),stair
+stair_gf_3,G,275.12915,257.71219,Staircase 3 (Quadrangle Left),stair
+stair_gf_2,G,281.3284,163.54243,Staircase 2 (Backstage),stair
+stair_gf_5,G,261.5498,181.25461,Staircase Main,stair
+lift_gf,G,259.1882,192.17712,Lifts,lift
+stair_gf_6,G,353.65314,200.73801,Staircase 6,stair
+stair_gf_7,G,415.64575,157.04797,Staircase 7 (MYP 1 Corridor),stair
+stair_gf_8,G,425.09225,227.30627,Staircase 8 (PYP 1 Corridor),stair
+stair_gf_9,G,495.05536,268.63467,Staircase 9 (Wooden Spiral),stair
+stair_gf_11,G,186.86346,224.64944,Staircase 11 (PYP 2 Corridor),stair
+stair_gf_12,G,185.97786,387.30627,Staircase 12 (KG 2 Corridor),stair
+stair_gf_14,G,488.56088,372.25092,Staircase 14 (Pre KG Corridor),stair
+stair_gf_13,G,422.43542,399.11438,Staircase 13 (KG 1 Corridor),stair
+stair_gf_15,G,354.83395,108.04428,Staircase 15 (ALC),stair
+stair_gf_16,G,134.61255,259.4834,Staircase 16 (FM),stair
+stair_gf_17,G,134.02214,354.53876,Staircase 17 (GRE),stair
+stair_gf_18,G,468.48709,123.39484,Staircase 18 (Art Room),stair
+room_gf_1,G,131.95572,117.49078,Inclusion Unit,room
+room_gf_2,G,163.83763,114.24355,PYP 3 G,room
+room_gf_3,G,149.9631,135.49815,PYP 3 F,room
+room_gf_4,G,183.32103,121.91882,PYP 3 D,room
+room_gf_5,G,166.49446,141.40221,PYP 3 E,room
+room_gf_6,G,214.90775,132.25092,PYP 3 B,room
+room_gf_7,G,206.64206,149.9631,PYP 3 C,room
+room_gf_8,G,233.21033,129.5941,PYP 3 A,room
+room_gf_9,G,227.60147,150.2583,PYP 3 H,room
+room_gf_10,G,256.82657,152.91513,Canteen,room
+room_gf_11,G,248.26569,131.36531,PYP 3 Supervisor,room
+room_gf_12,G,259.77859,133.13654,HRBP,room
+room_gf_13,G,265.97787,99.188194,Clinic 1,room
+room_gf_14,G,274.24353,133.13654,Digital Learning Centre,room
+room_gf_15,G,286.64206,131.95572,Dean of Academics,room
+room_gf_16,G,305.53506,111.29151,Senior Library,room
+room_gf_17,G,332.69373,135.49815,Associate Principal's Office,room
+room_gf_18,G,339.4834,125.46126,Head of Primary's Office,room
+room_gf_200,G,330.0369,125.46126,Vice Principal's Office,room
+room_gf_20,G,355.71954,132.25092,Secretary's Office (SL),room
+room_gf_21,G,365.16605,132.25092,Supervisor of Teaching and Learning Office,room
+room_gf_22,G,359.26199,150.84871,Music Room (PYP 1 Corridor),room
+room_gf_23,G,346.27307,99.778595,Design and Technology Lab,room
+room_gf_24,G,381.40222,128.11809,PYP 3 I,room
+room_gf_25,G,379.63098,153.80074,PYP 3 J,room
+room_gf_160,G,400.2952,128.70848,MYP 1 A,room
+room_gf_26,G,399.7048,153.50554,MYP 1 B,room
+room_gf_27,G,431.88193,124.28044,MYP 1 C,room
+room_gf_28,G,443.39484,147.89668,MYP 1 E,room
+room_gf_29,G,450.18451,116.60516,MYP 1 D,room
+room_gf_30,G,461.99261,139.3358,MYP 1 F,room
+room_gf_31,G,477.34317,117.19557,Art Room,room
+room_gf_32,G,314.98154,155.57196,Inclusion Room (Backstage),room
+room_gf_33,G,323.83765,154.39114,Greenroom,room
+room_gf_34,G,305.83026,196.30997,Auditorium,room
+room_gf_35,G,241.18082,231.43912,PYP 2 A,room
+room_gf_36,G,224.64944,230.84871,PYP 2 B,room
+room_gf_37,G,206.05167,229.9631,PYP 2 C,room
+room_gf_38,G,243.54243,252.69373,PYP 2 G,room
+room_gf_39,G,224.35425,252.39853,PYP 2 F,room
+room_gf_156,G,207.52768,250.0369,IER - GF,room
+room_gf_41,G,157.93358,241.77122,PYP 2 D,room
+room_gf_42,G,167.38008,258.00739,PYP 2 H,room
+room_gf_43,G,144.35425,246.49446,PYP 2 E,room
+room_gf_44,G,156.45757,264.20663,PYP 2 I,room
+room_gf_45,G,125.16605,252.98894,Facility Manager's Office,room
+stair_gf_19,G,138.15498,121.62362,Staircase 19 (IU),stair
+room_gf_46,G,148.48709,289.88931,Human Resources Office,room
+room_gf_47,G,147.89668,297.85977,Hindustani Music Room,room
+room_gf_48,G,148.78229,313.50552,STS Office,room
+room_gf_49,G,148.19188,328.26569,KG 1 and 2 Supervisor's Office,room
+room_gf_50,G,150.84871,345.68265,KG 2 F,room
+room_gf_51,G,126.34686,360.73801,GRE,room
+room_gf_52,G,147.60147,366.64206,Music Room,room
+room_gf_53,G,168.26569,354.53876,KG 2 E,room
+room_gf_157,G,157.93358,372.54611,KG 2 G,room
+room_gf_55,G,202.21402,363.09964,KG 2 C,room
+room_gf_56,G,204.57565,382.58304,KG 2 D,room
+room_gf_57,G,223.17343,380.8118,KG 2 B,room
+room_gf_58,G,221.10701,363.09964,SOR 1,room
+room_gf_59,G,247.38008,361.91882,KG 1 G,room
+room_gf_60,G,244.42804,383.76382,KG 2 A,room
+room_gf_61,G,283.69003,359.85239,Parents Lounge,room
+room_gf_62,G,284.87085,398.81918,Conference Room,room
+room_gf_63,G,304.64944,361.91882,PRE,room
+room_gf_64,G,330.33209,402.06641,Registrar,room
+room_gf_65,G,326.78967,384.94464,Reception,room
+room_gf_66,G,334.76016,382.28781,Accounts Office,room
+room_gf_67,G,346.27307,378.15497,GSM Office,room
+room_gf_68,G,346.56827,388.78229,MSO Office,room
+room_gf_69,G,327.08487,356.90036,Principal's Office,room
+room_gf_70,G,328.85608,364.87085,Principal's Secretary's Office,room
+room_gf_71,G,343.61624,361.91882,Director's Office,room
+room_gf_72,G,368.11807,359.85239,KG 1 B,room
+room_gf_73,G,368.11807,382.28781,KG 1 A,room
+room_gf_74,G,389.66791,359.85239,KG 1 D,room
+room_gf_75,G,386.71588,384.05905,KG 1 C,room
+room_gf_76,G,409.4465,360.14761,KG 1 F,room
+room_gf_77,G,407.08487,382.87823,KG 1 E,room
+room_gf_78,G,442.21402,357.19559,Pre KG D,room
+room_gf_79,G,455.49817,376.97418,Pre KG A,room
+room_gf_80,G,457.56458,351.88193,Pre KG C,room
+room_gf_81,G,468.48709,368.11807,Pre KG B,room
+room_gf_82,G,463.46863,322.65683,Learning Support Unit,room
+room_gf_83,G,462.28781,294.02213,Clinic 2,room
+room_gf_84,G,431.58673,307.89667,Discovery Centre,room
+room_gf_85,G,415.94095,286.34686,PYP 2 Supervisor,room
+room_gf_86,G,489.15131,249.15129,PYP Coordinator's Office,room
+room_gf_87,G,331.80811,246.78967,Assistant MSO's Office,room
+room_gf_88,G,458.4502,267.74908,PYP 1 H,room
+room_gf_89,G,473.21033,247.67528,PYP 1 G,room
+room_gf_90,G,454.31735,240.0,PYP 1 E,room
+room_gf_91,G,441.62363,259.1882,PYP 1 F,room
+room_gf_92,G,407.67526,253.57933,PYP 1 D,room
+room_gf_93,G,409.4465,229.3727,PYP 1 C,room
+room_gf_94,G,387.89667,253.57933,PYP 1 A,room
+room_gf_95,G,387.89667,230.2583,PYP 1 B,room
+room_gf_96,G,368.7085,229.07748,Music/Violin Room,room
+room_gf_97,G,368.11807,253.87454,IT Room 1,room
+room_gf_98,G,258.00739,252.98894,Music Room (PYP 2 Corridor),room
+room_gf_99,G,280.14761,264.50183,PYP 1 Supervisor's Office,room
+room_gf_100,G,200.44281,306.42065,PLC,room
+room_gf_101,G,536.67896,305.53506,Multipurpose Hall,room
+room_gf_102,G,522.50922,279.55719,Stationary Store,room
+room_gf_103,G,523.09961,327.67526,Book Store,room
+room_gf_104,G,530.47968,341.84503,Main Canteen,room
+room_gf_105,G,547.6015,341.84503,PE Room,room
+room_gf_106,G,539.33582,357.19559,KG Swimming Pool,room
+room_gf_107,G,540.5166,376.08856,Swimming Pool,room
+room_gf_108,G,623.17346,248.26569,Main Field,room
+room_gf_109,G,549.96307,305.83026,Store Room,room
+room_gf_110,G,308.48709,307.01108,Quadrangle,room
+room_gf_155,G,304.94464,247.97047,Ground Floor Auditorium Foyer,room
+room_gf_112,G,336.53137,232.61992,Male Prayer Room,room
+room_gf_113,G,275.12915,232.32472,Female Washroom,room
+room_gf_114,G,357.78598,191.88191,Male Prayer Room,room
+room_gf_115,G,356.90036,124.28044,Female Washroom,room
+room_gf_116,G,526.64209,347.74908,Male Washroom,room
+room_gf_117,G,546.42065,347.74908,Female Washroom,room
+room_gf_118,G,533.72693,389.66791,Male Washroom,room
+room_gf_119,G,547.30627,389.9631,Female Washroom,room
+room_gf_120,G,529.59412,323.83765,Female Washroom,room
+room_gf_121,G,528.7085,283.39484,Male Washroom,room
+room_gf_122,G,256.53137,123.69004,Male Washroom,room
+room_gf_123,G,266.56827,388.78229,Male Washroom,room
+room_gf_124,G,266.56827,378.4502,Female Washroom,room
+entrance_1,G,305.83026,405.01846,Reception Entrance,entrance
+entrance_2,G,133.72694,307.30627,STS/OT Entrance,entrance
+entrance_3,G,261.25461,172.39853,Auditorium Entrance,entrance
+entrance_4,G,130.18451,107.45387,PYP 2 Entrance,entrance
+entrance_5,G,479.7048,105.09225,MYP 1 Entrance,entrance
+entrance_17,G,350.40591,172.10332,Entrance (MPH/Athletics Track),entrance
+entrance_16,G,498.89297,248.85609,Entrance (Footbal Field/Athletics Track),entrance
+entrance_15,G,487.08487,307.30627,Entrance 15 (MPH),entrance
+entrance_9,G,491.80811,340.07379,Pre KG Entrance,entrance
+entrance_10,G,127.82288,344.79706,KG 2 Entrance,entrance
+room_gf_125,G,61.992619,241.77122,Bus Bay,room
+corridor_gf_1,G,149.07748,123.69004,PYP 2 Corridor,corridor
+corridor_gf_2,G,194.24355,138.45018,PYP 2 Corridor Junction,corridor
+corridor_gf_3,G,263.77859,140.81181,PYP 2 Corridor Exit,corridor
+corridor_gf_100,G,307.74908,142.87823,Library Corridor Mid-Junction,corridor
+corridor_gf_5,G,348.47232,140.95941,MYP 1 Corridor Entrance,corridor
+corridor_gf_6,G,420.95941,140.95941,MYP 1 Corridor Junction,corridor
+corridor_gf_7,G,462.28781,123.39484,MYP 1 Corridor Exit,corridor
+corridor_gf_160,G,345.53506,239.7048,PYP 1 Corridor Entrance,corridor
+corridor_gf_9,G,433.06274,243.09962,PYP 1 Corridor Junction,corridor
+corridor_gf_10,G,485.31366,266.56827,PYP 1 Corridor Exit,corridor
+corridor_gf_11,G,476.16235,307.60147,DLC Corridor Junction,corridor
+corridor_gf_12,G,486.19925,342.58304,Pre KG Corridor Entrance,corridor
+corridor_gf_13,G,432.32474,372.25092,KG 1 Corridor Junction,corridor
+corridor_gf_150,G,356.30997,372.69373,KG 1 Corridor Entrance,corridor
+corridor_gf_15,G,258.15497,371.0701,KG 2 Corridor Entrance,corridor
+corridor_gf_16,G,304.35425,372.98892,Reception Corridor Junction,corridor
+corridor_gf_17,G,181.25461,371.66052,KG 2 Corridor Junction,corridor
+corridor_gf_18,G,130.74539,348.91513,KG 2 Corridor Exit,corridor
+corridor_gf_19,G,138.95941,330.62732,STS Corridor Junction 1,corridor
+corridor_gf_20,G,139.77859,284.42804,STS Corridor Junction 2,corridor
+corridor_gf_21,G,201.32841,327.52768,PLC Corridor Entrance 1,corridor
+corridor_gf_22,G,201.47601,284.87085,PLS Corridor Entrance 2,corridor
+corridor_gf_23,G,130.92252,266.71588,PYP 2 Corridor Entrance,corridor
+corridor_gf_24,G,179.77859,243.69003,PYP_2_Corridor_Junction,corridor
+corridor_gf_25,G,265.64575,239.7048,PYP 2 Corridor Exit,corridor
+corridor_gf_26,G,305.83026,239.8524,GF Auditorium Foyer Junction,corridor
+corridor_gf_27,G,268.48709,196.76753,Auditorium Corridor Junction 1,corridor
+corridor_gf_28,G,265.97787,117.49078,Clinic 1 junction,corridor
+corridor_gf_29,G,345.01108,128.64206,DT Lab Corridor Junction,corridor
+corridor_gf_30,G,365.46124,141.10701,MYP 1 Corridor Supervisor-Music Junction,corridor
+corridor_gf_31,G,379.92621,141.25461,MYP 1 Corridor PYP 3 I-J Junction,corridor
+corridor_gf_32,G,400.2952,140.81181,MYP 1 Corridor MYP 1 A-B Junction,corridor
+corridor_gf_33,G,438.52399,135.20296,MYP 1 Corridor MYP 1 C-E Junction,corridor
+corridor_gf_34,G,278.9668,141.84502,Library Corridor Backstage Junction,corridor
+room_gf_126,G,307.15866,169.7417,Backstage,room
+corridor_gf_35,G,270.40591,158.52399,Backstage corridor,corridor
+corridor_gf_36,G,276.60516,169.29889,Backstage Junction,corridor
+corridor_gf_37,G,252.69373,140.369,PYP 3 Corridor Supervisor-Canteen Junction,corridor
+corridor_gf_38,G,231.29152,140.5166,PYP 3 Corridor PYP 3 A-H Junction,corridor
+corridor_gf_39,G,212.84132,140.95941,PYP 3 Corridor PYP 3 B-C Junction,corridor
+corridor_gf_40,G,174.02214,135.05534,PYP 3 Corridor PYP 3 D-E Junction,corridor
+corridor_gf_41,G,344.94464,196.75276,Auditorium Corridor 2 Junction,corridor
+corridor_gf_42,G,523.39484,215.49815,MPH Junction,corridor
+corridor_gf_43,G,243.69003,241.47601,PYP 2 Corridor PYP 2 A-G Junction,corridor
+corridor_gf_44,G,225.23985,241.32841,PYP 2 Corridor PYP 2 B-F,corridor
+corridor_gf_45,G,204.13284,241.62361,PYP 2 Corridor PYP 2 C -IER Junction,corridor
+corridor_gf_46,G,164.42804,249.44649,PYP 2 Corridor PYP 2 D-H Junction,corridor
+corridor_gf_47,G,145.68266,256.97418,PYP 2 Corridor PYP 2 E-I Junction,corridor
+corridor_gf_48,G,367.97049,242.36162,PYP 1 Corridor Music/Violin Room - IT 1 Junction,corridor
+corridor_gf_50,G,388.63467,241.77122,PYP 1 Corridor PYP 1 B-A Junction,corridor
+corridor_gf_51,G,408.7085,242.21402,PYP 1 Corridor PYP 1 C-D Junction,corridor
+corridor_gf_52,G,449.15131,249.8893,PYP 1 Corridor PYP 1 E-F Junction,corridor
+corridor_gf_53,G,465.09225,255.79337,PYP 1 Corridor PYP 1 G-H Junction,corridor
+corridor_gf_54,G,478.08118,288.41327,DLC Corridor Junction 1,corridor
+corridor_gf_55,G,478.81918,330.18451,DLC Corridor Junction 2,corridor
+corridor_gf_56,G,461.5498,359.55719,KG 1 Corridor Pre KG C-B Junction,corridor
+corridor_gf_57,G,447.23248,367.82288,KG 1 Corridor Pre KG D-A Junction,corridor
+corridor_gf_58,G,407.23248,372.25092,KG 1 Corridor KG 1 F-E Junction,corridor
+corridor_gf_59,G,387.60147,372.98892,KG 1 Corridor KG 1 D-C Junction,corridor
+corridor_gf_60,G,370.62732,372.10333,KG 1 Corridor KG 1 B-A Junction,corridor
+corridor_gf_61,G,318.81918,372.54611,Principal/Reception Junction,corridor
+corridor_gf_62,G,319.40961,383.02582,Reception point,corridor
+corridor_gf_63,G,285.16605,370.7749,Conference Room Junction,corridor
+corridor_gf_64,G,243.09962,371.95572,KG 2 Corridor KG 1 G-KG 2 A Junction,corridor
+corridor_gf_65,G,222.43542,372.25092,KG 2 Corridor SOR1-KG 2 B Junction,corridor
+corridor_gf_66,G,203.39484,372.69373,KG 2 Corridor KG 2 C-D Junction,corridor
+corridor_gf_67,G,163.09962,364.57565,KG 2 Corridor KG 2 E-G Junction,corridor
+corridor_gf_68,G,144.79704,356.60516,KG 2 Corridor KG 2 F- Music Room Junction,corridor
+room_gf_150,G,185.23985,145.97786,Washroom (PYP 3 Corridor),room

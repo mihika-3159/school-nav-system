@@ -1,0 +1,48 @@
+id,floor,x,y,name,type
+Room_TF_1,3,263.27274,110.06061,12F,room
+Room_TF_2,3,240.0,109.57576,12E,room
+Room_TF_3,3,219.15152,110.06061,12D,room
+Room_TF_4,3,180.36363,99.393936,11A,room
+Room_TF_5,3,155.63637,86.303032,11B,room
+Room_TF_6,3,172.12122,79.030304,11D,room
+Room_TF_7,3,192.48485,88.242424,11C,room
+Room_TF_8,3,232.72728,93.090912,12A,room
+Room_TF_9,3,252.60606,93.57576,12B,room
+Room_TF_10,3,267.15152,93.57576,12C,room
+Room_TF_11,3,319.51514,135.75757,STAFFroom,room
+Room_TF_13,3,394.18182,91.151512,DP1,room
+Room_TF_12,3,310.78787,129.93939,SOR7,room
+Room_TF_14,3,393.69696,123.15151,DP2,room
+Room_TF_15,3,402.42426,92.606064,DPLounge,room
+Room_TF_16,3,401.93939,109.09091,DP3,room
+Room_TF_17,3,424.72726,110.54546,DP4,room
+Room_TF_18,3,464.48486,89.696968,DP7,room
+Room_TF_19,3,468.36365,106.66666,DP5,room
+Room_TF_DP8,3,482.42426,79.515152,DP 8,room
+Room_TF_20,3,488.24243,96.969696,DP6,room
+Room_TF_21,3,368.0,109.57576,CarrerCounselor,room
+Room_TF_22,3,314.66666,118.30303,IBSecretary,room
+stair_tf_1,3,192.9697,110.54546,Staircase 1 (PYP 3 Corridor - Third Floor),stair
+stair_tf_7,3,451.87878,109.57576,Staircase 7 (MYP 1 Corridor - Third Floor),stair
+lift_tf,3,280.24243,149.81818,Lifts,lift
+Corridor_TF_26,3,164.84848,83.878784,Between11Dand11B,corridor
+Corridor_TF_29,3,205.57576,102.78788,Between11and12Supervisors,corridor
+Corridor_TF_30,3,226.42424,102.30303,Between12Aand12D,corridor
+Corridor_TF_31,3,247.27272,102.30303,Between12Band12E,corridor
+Corridor_TF_32,3,269.57574,101.81818,Between12Cand12F,corridor
+Corridor_TF_33,3,285.09091,118.30303,Between12FandIBSecretary,corridor
+Corridor_TF_34,3,304.48486,135.75757,BetweenSOR7AndStaffRoom,corridor
+Corridor_TF_35,3,385.45456,101.33334,BetweenDP1andDp2,corridor
+corridor_tf_2,3,407.27274,101.81818,BetweenDPLoungeandDP3,corridor
+Corridor_TF_36,3,430.06061,101.81818,BetweenDPLoungeandDP4,corridor
+corridor_tf_3,3,450.90909,102.30303,BetweenOfficeandStaircase,stair
+Corridor_TF_37,3,470.78787,96.484848,BetweenDP7andDP5,corridor
+Corridor_TF_38,3,489.21213,87.757576,BetweenDP8andDp6,corridor
+room_tf_1,3,462.18182,108.9697,Washrooom (IB Corridor),room
+room_tf_2,3,444.36365,95.030304,IBDP Coordinator and Assistant Coordinators Office,room
+room_tf_3,3,211.39394,94.181816,Grade 11 and 12 Supervisor's Office,room
+room_tf_5,3,195.75757,106.18182,Washroom (ISC Corridor),room
+stair_tf_18,3,505.21213,79.878784,Staircase 18 (Art Room - Third Floor),stair
+stair_tf_5,3,278.30304,173.57576,Staircase Main (TF),stair
+stair_tf_19,3,152.0,78.42424,Staircase 19 (IU - Third Floor),stair
+corridor_tf_1,3,187.39394,93.939392,11-12 Corridor 11 C - A Junction,corridor

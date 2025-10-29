@@ -1,0 +1,122 @@
+id,floor,x,y,name,type
+Room_SF_3,2,269.09091,242.90909,8F,room
+Room_SF_4,2,255.27272,257.69696,8A,room
+Room_SF_6,2,229.81818,259.15152,8B,room
+Room_SF_8,2,220.8485,258.42426,8C,room
+Room_SF_5,2,230.78787,242.90909,8E,room
+Room_SF_7,2,221.57576,244.36363,8D,room
+Room_SF_12,2,145.93939,258.90909,7D,room
+Room_SF_11,2,163.87878,290.42426,7C,room
+Room_SF_10,2,188.12122,277.81818,7B,room
+Room_SF_28,2,437.33334,135.75757,10A,room
+Room_SF_21,2,281.21213,136.72728,MYP5F,room
+Room_SF_19,2,259.87878,139.63637,MYP5E,room
+Room_SF_34,2,544.96973,112.48485,9B,room
+Room_SF_32,2,526.06061,124.12122,10C,room
+Room_SF_18,2,231.27272,137.21213,MYP5A,room
+Room_SF_17,2,231.27272,104.24242,MYP5G,room
+Room_SF_29,2,463.0303,103.75758,10E,room
+Room_SF_27,2,436.36365,103.75758,10F,room
+Room_SF_33,2,526.06061,83.393936,9A,room
+Room_SF_15,2,182.30302,96.969696,MYP4E,room
+Room_SF_13,2,162.90909,88.727272,11F,room
+Room_SF_14,2,147.87878,120.72727,11E,room
+Room_SF_16,2,169.21213,128.9697,MYP4D,room
+Room_SF_2,2,468.84848,241.93939,Chemistry Lab Entrance 1,room
+Room_SF_1,2,431.75757,259.39395,Music room Entrance 1,room
+Room_SF_30,2,463.0303,138.18182,10B,room
+Room_SF_9,2,168.72728,247.75757,7A,room
+path31,2,256.9697,103.27273,MYP5D,room
+Room_SF_20,2,280.72726,103.75758,MYP5B,room
+room_sf_60,2,314.66666,103.27273,DP 9,room
+Room_SF_24,2,387.87878,104.24242,DP10,room
+Room_SF_23,2,351.51514,82.42424,Agile Learning Centre Entrance 1,entrance
+Room_SF_25,2,414.06061,103.75758,MYP5C,room
+Room_SF_31,2,507.15152,93.090912,10D,room
+Room_SF_26,2,413.09091,135.75757,CookeryLab,room
+room_sf_36,2,539.15149,262.78787,Biology Lab Entrance 1,entrance
+Room_SF_35,2,544.96973,77.57576,Geography Lab,room
+Room_SF_36,2,393.2121,181.09091,AvHub,room
+Room_SF_37,2,308.84848,161.93939,Dance Studio Entrance 1,room
+Corridor_SF_38,2,143.51515,269.57574,Between7Dand7C,corridor
+Corridor_SF_39,2,165.33333,258.42426,Between7Aand7B,corridor
+Corridor_SF_40,2,211.87878,252.12122,Between8Dand8C,corridor
+Corridor_SF_41,2,236.12122,250.66667,Between8Eand8B,corridor
+Corridor_SF_42,2,261.81818,250.66667,Between8Fand8A,corridor
+Corridor_SF_44,2,454.78787,253.57576,BetweenChemlabandMusicRoom,corridor
+corridor_sf_51,2,526.54547,267.15152,Lab Corridor Bio-Chem Labs Junction,corridor
+corridor_sf_53,2,157.57576,97.454544,MYP 5 Corridor 11 E - F Junction,corridor
+Corridor_SF_50,2,175.0303,106.18182,BetweenMYP4EandMYP4D,corridor
+Corridor_SF_51,2,199.75757,113.93939,BetweenMYP4&5SUPERVISORSandStaircases,corridor
+Corridor_SF_52,2,224.9697,114.90909,BetweenMYP5GandMYP5A,corridor
+Corridor_SF_53,2,249.21213,115.39394,BetweenMYP5DandMYP5E,corridor
+Corridor_SF_54,2,271.0303,114.90909,BetweenMYP5BandMYP5F,corridor
+Corridor_SF_55,2,302.06061,114.90909,BetweenDP9andSeniorschool,corridor
+Corridor_SF_56,2,374.30304,115.87878,BetweenDP10andStaffroom,corridor
+Corridor_SF_57,2,406.30304,113.93939,BetweenCookeryLabAndMYP5C,corridor
+Corridor_SF_58,2,427.15152,115.39394,Between10Fand10A,corridor
+Corridor_SF_59,2,454.30304,114.90909,Between10Eand10B,corridor
+Corridor_SF_60,2,478.06061,114.42424,BetweenGrade9And10supervisorsandstaircase,corridor
+Corridor_SF_61,2,501.81818,108.60606,Between10DAND10c,corridor
+Corridor_SF_62,2,523.15149,99.393936,Between9Aand9B,corridor
+stair_sf_11,2,194.9091,241.45454,Staircase 11 (PYP 2 Corridor - Second Floor),stair
+Corridor_SF_43,2,415.51514,253.09091,BetweenStoreAndIER2,corridor
+Room_SF_44,2,482.42426,259.39395,SOR6,room
+stair_sf_8,2,483.39395,243.39394,Staircase 8 (PYP 1 Corridor - Second Floor),stair
+Room_SF_46,2,565.81818,278.78787,BioStore,room
+Corridor_SF_48,2,549.81818,279.7576,Lab Corridor Exit,corridor
+stair_sf_7,2,477.09091,129.93939,Staircase 7 (MYP 1 Corridor - Second Floor),stair
+room_sf_24,2,325.21213,82.909088,Agile Learning Centre Entrance 2,room
+room_sf_25,2,288.24243,72.121216,Agile Learning Centre Entrance 3,room
+room_sf_26,2,391.51514,72.484848,Agile Learning Centre Entrance 4,room
+room_sf_27,2,470.18182,105.93939,Grade 9 and 10 Supervisor's Office,room
+room_sf_28,2,334.54544,103.0303,ISC Lounge Entrance 1,room
+room_sf_29,2,345.09091,102.30303,ISC Lounge Entrance 2,room
+room_sf_30,2,490.54544,122.90909,Washroom (10th Grade Corridor),room
+room_sf_31,2,188.84848,119.87879,Washroom (MYP 5 Corridor),room
+room_sf_32,2,208.72728,106.54546,MYP 4 and 5 Supervisor,room
+room_sf_33,2,370.78787,161.81818,Dance Studio Entrance 2,room
+room_sf_34,2,473.33334,258.30301,Music Room Entrance 2,room
+room_sf_35,2,507.63635,250.30302,Biology Lab Entrance 2,room
+room_sf_37,2,433.93939,243.51515,Chemistry Lab Entrance 2,room
+room_sf_38,2,423.87878,241.69698,Store (SF),room
+room_sf_39,2,424.12122,259.63635,IER 2 (SF),room
+corridor_sf_1,2,498.30304,252.9697,Lab Corridor Mid-Corridor Junction,corridor
+room_sf_40,2,499.15152,243.87878,Washroom (Lab Corridor),room
+room_sf_41,2,394.42426,266.78787,Female Washroom,room
+room_sf_42,2,394.90909,278.42426,Male Washroom,room
+room_sf_43,2,284.48486,266.78787,Female Washroom,room
+room_sf_44,2,285.09091,278.18182,Male Washroom,room
+room_sf_45,2,179.51515,242.90909,Washroom (8th Grade Corridor),room
+room_sf_46,2,197.33333,259.15152,Grade 8 Supervisor's Office,room
+corridor_sf_2,2,341.81818,113.81818,Main Corridor Middle Junction,corridor
+room_sf_48,2,377.98071,121.87949,ICT Engineer,room
+room_sf_49,2,305.29871,119.65104,Director of Liberal Arts Office,room
+room_sf_50,2,301.18463,135.07883,Staff Room Entrance 1,room
+room_sf_51,2,379.00925,135.42166,Staff Room Entrance 2,room
+lift_sf,2,282.84271,180.84792,Lift (Second Floor),lift
+corridor_sf_3,2,389.12302,114.85128,Main Corridor DP 10 -Passage Junction,corridor
+corridor_sf_4,2,387.2374,136.27876,Staff Room (SF) Junction 2,corridor
+corridor_sf_5,2,386.20886,161.6489,Dance Studio Junction 2,corridor
+corridor_sf_6,2,385.00894,181.5336,AV Hub Junction,corridor
+corridor_sf_7,2,388.78015,250.7872,Lab Corridor Entrance,corridor
+corridor_sf_8,2,387.92307,270.50049,Washroom - Stair Junction 2,corridor
+room_sf_56,2,537.74402,283.18555,Chemistry Lab Entrance 1,room
+room_sf_57,2,501.40298,264.84363,Chemistry Lab Entrance 2,room
+corridor_sf_50,2,291.07086,115.8798,Main Corridor DP 9 Junction,corridor
+corridor_sf_9,2,291.75653,134.90741,Staff Room (SF) Junction 1,corridor
+corridor_sf_10,2,295.69919,163.19168,Dance Studio Entrance 1 Junction,corridor
+corridor_sf_11,2,293.1279,181.36218,Main Corridor Lift SF Junction,lift
+corridor_sf_12,2,289.18524,252.32999,8th Grade Corridor Entrance,corridor
+corridor_sf_13,2,290.55661,271.18616,Washroom - Stair Junction 1,corridor
+stair_sf_19,2,128.39345,88.795471,Staircase 19 (IU - Second Floor),stair
+stair_sf_1,2,196.44711,120.33672,Staircase 1 (PYP 3 Corridor - Second Floor),stair
+stair_sf_10,2,283.6998,73.024849,Staircase 10 (ALC - Second Floor),stair
+stair_sf_15,2,395.29413,72.339165,Staircase 15 (ALC - Second Floor),stair
+stair_sf_18,2,538.94391,93.252388,Staircase 18 (Art Room - Second Floor),stair
+stair_sf_5,2,279.07147,167.30576,Staircase Main (SF),stair
+stair_sf_6,2,395.80838,194.73293,Staircase 6 (Second Floor),stair
+stair_sf_9,2,572.88507,289.35666,Staircase 9 (Wooden Spiral),stair
+stair_sf_4,2,380.552,265.5293,Staircase 4 (Quadrangle Right - Second Floor),stair
+stair_sf_3,2,297.75623,267.07208,Staircase 3 (Quadrangle Left - Second Floor),stair
+stair_sf_16,2,132.33611,276.50018,Staircase 16 (FM - Second Floor),stair

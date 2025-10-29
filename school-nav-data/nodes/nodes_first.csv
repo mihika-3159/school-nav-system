@@ -1,0 +1,189 @@
+id,floor,x,y,name,type
+stair_ff_2,1,330.65692,129.927,Staircase 2 (Backstage - First Floor),stair
+stair_ff_1,1,229.37956,108.39416,Staircase 1 (PYP 3 Corridor - First Floor),stair
+stair_ff_7,1,480.29196,107.29927,Staircase 7 (MYP 1 Corridor,stair
+stair_ff_9,1,576.64233,266.05838,Staircase 9 (Wooden Spiral - First Floor),stair
+stair_ff_8,1,490.69342,221.16788,Staircase 8 (PYP 1 Corridor - First Floor),stair
+stair_ff_13,1,489.41605,404.37955,Staircase 13 (KG 1 Corridor - First Floor),stair
+stair_ff_14,1,552.73724,371.16788,Staircase 14 (Pre KG Corridor - First Floor),stair
+stair_ff_18,1,544.8905,81.204376,Staircase 18 (Art Room - First Floor),stair
+stair_ff_6,1,414.59854,176.64233,Staircase 6 - First Floor,stair
+stair_ff_3,1,320.25546,242.70073,Staircase 3 (Quadrangle Left - First Floor),stair
+stair_ff_4,1,396.8978,242.70073,Staircase 4 (Quadrangle Right - First Floor),stair
+stair_ff_19,1,165.14598,78.284668,Staircase (IU - First Floor),stair
+room_ff_1,1,178.06703,93.807777,MYP 4 B,room
+room_ff_2,1,197.03505,78.581757,MYP 4 C,room
+room_ff_3,1,195.87373,97.03363,MYP 4 A,room
+room_ff_4,1,218.0676,86.839935,MYP 3 D,room
+room_ff_5,1,233.80975,81.80761,Male Prayer Room,room
+room_ff_6,1,243.35828,108.2596,MYP 3 F,room
+room_ff_7,1,256.77783,90.969032,MYP 3 E,room
+room_ff_8,1,266.97153,107.61443,MYP 3 G,room
+room_ff_9,1,266.45538,91.743233,Curriculum Planning Room (CPR),room
+room_ff_10,1,289.2944,107.8725,MYP 3 C,room
+corridor_ff_1,1,177.1638,77.936584,MYP 3 Corridor Exit,corridor
+corridor_ff_2,1,208.64812,93.678741,MYP 3 Corridor MYP 4 A - MYP 3 D Junction,corridor
+corridor_ff_3,1,229.93874,100.38852,MYP 3 Corridor Prayer Room - Stair Junction,corridor
+corridor_ff_4,1,250.84225,100.90466,MYP 3 Corridor MYP3 E-F Junction,corridor
+corridor_ff_5,1,285.55243,100.51756,MYP 3 Corridor MYP 3 G - CPR Junction,corridor
+corridor_ff_6,1,310.45599,100.25948,MYP 3 Corridor Entrance,corridor
+room_ff_11,1,161.03453,75.226868,MYP Coordinator's Office,room
+room_ff_12,1,219.61601,105.54988,Washroom (MYP 3 Corridor),room
+stair_ff_15,1,305.68173,64.129936,Staircase 15 (ALC - First Floor),stair
+room_ff_13,1,318.97226,47.871647,Sewing Room,room
+room_ff_14,1,340.39191,47.613579,Pottery Room,room
+room_ff_15,1,363.48901,47.226475,Art Room (First Floor),room
+room_ff_16,1,392.26361,47.484543,IT Services Room,room
+room_ff_17,1,359.2309,92.001305,Budhayana Spark Lab,room
+corridor_ff_7,1,312.26248,64.646072,BSL Corridor 1 Junction,corridor
+corridor_ff_8,1,404.77991,64.904144,BSL Corridor 2 Junction,corridor
+corridor_ff_9,1,359.10187,101.42079,BSL Corridor 3 Junction,corridor
+corridor_ff_10,1,405.29605,100.13045,Grade 6 Corridor Entrance,corridor
+room_ff_18,1,350.19852,109.0338,Assistant PYP Coordinator,room
+room_ff_19,1,386.84418,107.8725,Grade 6 Supervisor's Office,room
+room_ff_20,1,345.42426,130.58249,School Counselor's Office,room
+room_ff_21,1,354.06952,131.09863,Examination Centre,room
+room_ff_22,1,373.03754,108.38863,Female Washroom,room
+room_ff_23,1,375.36014,129.55022,Male Washroom,room
+corridor_ff_11,1,288.5202,100.51756,MYP 3 Corridor MYP 3 C Junction,corridor
+room_ff_24,1,386.71515,130.71153,Exam Photocopy Room,room
+corridor_ff_12,1,402.71536,136.38902,FF Mid Corridor Junction 2,corridor
+corridor_ff_13,1,315.48834,137.29227,FF Mid Corridor Junction 1,corridor
+corridor_ff_14,1,349.94043,137.03419,Mid Corridor Counselor-Exam Centre Junction,corridor
+corridor_ff_15,1,384.26349,136.90517,Mid Corridor Washroom-Photocopy Junction,corridor
+room_ff_25,1,322.19812,143.35687,Counsellor's Room,room
+room_ff_26,1,394.8443,143.35687,Arabic and Islamic Education Supervisor's Office,room
+room_ff_28,1,409.68323,163.22812,Female Prayer Room,room
+corridor_ff_16,1,402.07022,163.74425,FF Corridor 2 Prayer Room Junction,corridor
+room_ff_27,1,427.23184,93.033577,SOR 4,room
+room_ff_29,1,414.58652,106.19505,SOR 3,room
+room_ff_30,1,449.68378,91.872269,6 E,room
+room_ff_31,1,437.42554,107.35636,6 F,room
+room_ff_32,1,472.13571,93.033577,6 D,room
+room_ff_33,1,459.87747,107.22733,6 C,room
+room_ff_34,1,484.65201,86.839935,Female Prayer Room,room
+room_ff_35,1,509.03946,102.32403,6 B,room
+room_ff_36,1,510.3298,84.775391,6 A,room
+room_ff_37,1,531.10431,74.323631,9 C,room
+room_ff_38,1,529.16876,91.485168,9 D,room
+room_ff_39,1,557.55627,76.517212,SOR 5,room
+room_ff_40,1,498.58771,107.61443,Washroom (6th Grade Corridor),room
+corridor_ff_17,1,421.94147,100.51756,6th Grade Corridor SOR 4-3 Junction,corridor
+corridor_ff_18,1,441.68369,100.13045,6th Grade Corridor 6E-F Junction,corridor
+corridor_ff_19,1,464.65173,100.51756,6th Grade Corridor 6D-C Junction,corridor
+corridor_ff_20,1,489.03918,99.872383,6th Grade Corridor Prayer Room-Stairs Junction,corridor
+corridor_ff_21,1,509.81366,93.291641,6th Grade Corridor 6A-B Junction,corridor
+corridor_ff_22,1,528.13654,85.033463,6th Grade Corridor 9C-D Junction,corridor
+corridor_ff_23,1,549.94324,70.710678,6th Grade Corridor Exit,corridor
+lift_ff,1,301.6817,165.42169,Lift (First Floor),lift
+corridor_ff_24,1,312.26248,229.55164,MYP 2 Corridor entrance,corridor
+corridor_ff_25,1,311.8754,242.06795,FF Auditorium Junction 1,corridor
+room_ff_43,1,284.13306,219.22891,MYP 3 B,room
+room_ff_41,1,280.39105,235.87431,Mindspark Lab,room
+room_ff_42,1,270.06833,219.87408,MYP 2 F,room
+room_ff_44,1,258.84238,233.5517,MYP 3 A,room
+room_ff_45,1,247.22931,220.64828,MYP 2 E,room
+room_ff_46,1,247.74544,233.9388,7 E,room
+room_ff_47,1,187.22845,233.80975,MYP 2 B,room
+room_ff_48,1,193.68016,245.29379,MYP 2 D,room
+room_ff_49,1,179.4864,236.90659,MYP 2 A,room
+room_ff_50,1,187.7446,250.32613,MYP 2 C,room
+room_ff_51,1,163.09908,264.00372,MYP 2 and 3 Supervisor,room
+corridor_ff_29,1,287.22986,228.51936,MYP 2 Corridor MYP 3 B -Mindspark Lab Junction,corridor
+corridor_ff_26,1,265.29407,228.13226,MYP 2 Corridor MYP 2 F -MYP 3 A Junction,corridor
+corridor_ff_27,1,242.326,228.39034,MYP 2 Corridor MYP 2 E - 7E Junction,corridor
+corridor_ff_28,1,220.39021,229.93874,MYP 2 Corridor Mid-Corridor Junction,corridor
+corridor_ff_30,1,192.77692,238.97113,MYP 2 Corridor MYP 2 B-D Junction,corridor
+corridor_ff_31,1,174.97021,247.74544,MYP 2 Corridor Exit,corridor
+room_ff_52,1,342.9726,248.77771,FF Auditorium Entrance 1,room
+room_ff_53,1,373.42465,248.77771,FF Auditorium Entrance 2,room
+corridor_ff_32,1,314.06897,271.61676,Audi Corridor Junction 1 FF,corridor
+corridor_ff_33,1,402.97345,271.74579,Audi Corridor Junction 2,corridor
+room_ff_54,1,358.71478,264.26181,FF Audi Foyer,room
+room_ff_55,1,208.64812,220.77731,Washroom (MYP 2 Corridor),room
+corridor_ff_34,1,404.65088,228.77744,FF Lab Corridor Entrance,corridor
+corridor_ff_35,1,403.36053,242.19698,FF Auditorium Junction 2,corridor
+room_ff_100,1,415.48975,235.61624,Male Washroom (Lab Corridor),room
+room_ff_56,1,435.36099,234.97107,PYP 5 K,room
+room_ff_57,1,443.74823,234.713,PYP 5 J,room
+room_ff_58,1,467.10339,234.3259,PYP 5 I,room
+room_ff_59,1,435.49002,221.42249,Grade 5 AC,room
+room_ff_60,1,436.26425,214.45465,Physics Store 1,room
+room_ff_61,1,444.90952,220.13216,Physics Lab FF2 (Back),room
+room_ff_62,1,516.00732,225.55157,Physics Lab FF 1 (Back),room
+room_ff_63,1,548.13678,243.61635,Physics Lab FF1 (Front),room
+room_ff_64,1,508.7814,239.74533,Biology Lab FF1 (Back),room
+room_ff_65,1,541.16895,257.16492,Biology Lab FF1 (Front),room
+room_ff_66,1,571.75,254.06812,Physics Store 2,room
+room_ff_67,1,564.78217,267.87476,Biology Store,room
+corridor_ff_36,1,436.13522,229.55164,Lab Corridor Physics Store - PYP 5 K Junction,corridor
+corridor_ff_37,1,445.81277,228.90646,Lab Corridor Physics Lab (Back) - PYP 5 J Junction,corridor
+room_ff_68,1,482.07135,222.06766,Physics Lab FF2 (Front),room
+corridor_ff_38,1,466.97437,228.00322,Lab Corridor PYP 5 I Junction,corridor
+corridor_ff_39,1,486.97464,229.80971,Lab Corridor Physics Lab FF2 (Front) - Stair Junction,corridor
+room_ff_69,1,506.97491,221.55153,Washroom,room
+corridor_ff_40,1,509.16849,231.10005,Lab Corridor Physics Lab (Back) - Biology Lab (Back) Junction,corridor
+corridor_ff_41,1,545.16901,250.5842,Lab Corridor Physics Lab (Front) - Biology Lab (Front) Junction,corridor
+corridor_ff_42,1,568.39514,261.42307,Lab Corridor Physics Store-Biology Store Junction,corridor
+corridor_ff_43,1,494.71667,243.61635,Lab Corridor Passage Junction 1,corridor
+corridor_ff_44,1,472.90991,288.00409,Passage Junction 2,corridor
+corridor_ff_45,1,473.168,336.90799,Passage Junction 3,corridor
+corridor_ff_46,1,492.00696,371.74719,Passage Junction 4,corridor
+corridor_ff_47,1,499.74899,392.90878,PYP 5 Corridor Passage-Stair Junction,corridor
+room_ff_70,1,508.26526,384.6506,General Science Lab Entrance 1,room
+room_ff_71,1,542.20123,368.13425,General Science Lab Entrance 2,room
+room_ff_72,1,536.91083,386.19901,PYP 5 H,room
+room_ff_73,1,529.55591,389.81198,PYP 5 G,room
+room_ff_74,1,507.36203,405.55414,Washroom (PYP 5 Corridor),room
+room_ff_75,1,482.20038,403.23151,IT FF2,room
+room_ff_76,1,461.29684,403.23151,PYP 5 F,room
+room_ff_77,1,421.94147,401.81213,PYP 5 D,room
+room_ff_78,1,397.9411,402.32828,PYP 5 B,room
+room_ff_79,1,471.49054,388.39261,Staff Room (FF Entrance 1),room
+room_ff_80,1,450.58704,387.36032,Staff Room (FF Entrance 2),room
+room_ff_81,1,427.61896,387.61838,PYP 5 E,room
+room_ff_82,1,399.3605,387.48935,PYP 5 C,room
+room_ff_83,1,391.87653,387.87646,PYP 5 A,room
+corridor_ff_48,1,529.55591,382.45703,PYP 5 Corridor PYP 5 G-H Junction,corridor
+corridor_ff_49,1,548.26581,369.1665,PYP 5 Corridor GS Lab - Stair Junction,corridor
+corridor_ff_50,1,484.26492,396.65079,PYP 5 Corridor IT Room-Stair Junction,corridor
+corridor_ff_51,1,460.7807,395.74753,PYP 5 Corridor PYP 5 F - Staff Room Junction,corridor
+corridor_ff_52,1,425.1673,394.58624,PYP 5 Corridor PYP 5 E-D Junction,corridor
+corridor_ff_53,1,395.23141,394.8443,PYP 5 Corridor PYP 5 A-B Junction,corridor
+room_ff_84,1,391.36038,402.19925,PYP 4 and 5 Supervisor's Office,room
+corridor_ff_54,1,375.36014,392.26361,PYP 5 Corridor Entrance,corridor
+corridor_ff_55,1,341.55322,392.77975,PYP 4 Corridor Entrance,corridor
+room_ff_85,1,325.55301,387.48935,PYP 4 C,room
+room_ff_86,1,333.5531,402.07022,STEAM Studio Entrance 1,room
+room_ff_87,1,301.29459,402.19925,STEAM Studio Entrance 2,room
+room_ff_88,1,301.42361,387.87646,PYP 4 B,room
+room_ff_89,1,279.22977,390.19907,SOR 2,room
+room_ff_90,1,279.48782,401.55408,PYP 4 A,room
+room_ff_91,1,255.87459,389.42487,PYP 4 E,room
+room_ff_92,1,256.6488,402.45731,PYP 4 D,room
+room_ff_93,1,248.64868,389.29584,PYP 4 F,room
+room_ff_94,1,249.42288,402.32828,PYP 4 G,room
+room_ff_95,1,186.97038,390.07004,PYP 4 H,room
+room_ff_96,1,192.77692,377.94083,PYP 4 J,room
+room_ff_97,1,186.71233,373.68271,PYP 4 K,room
+room_ff_98,1,177.5509,386.06998,PYP 4 I,room
+room_ff_99,1,168.64755,359.2309,Resource Room,room
+corridor_ff_56,1,223.358,249.80998,MYP 2 Corridor Passage Junction 1,corridor
+corridor_ff_57,1,241.1647,286.06857,MYP 2 Corridor Passage Junction 2,corridor
+corridor_ff_58,1,242.06795,333.5531,MYP 2 Corridor Passage Junction 3,corridor
+corridor_ff_59,1,224.64835,369.9407,MYP 2 Corridor Passage Junction 4,corridor
+corridor_ff_60,1,218.97084,393.55396,PYP 4 Corridor Passage Junction,corridor
+corridor_ff_61,1,327.61755,394.0701,PYP 4 Corridor PYP 4 C Junction,corridor
+corridor_ff_62,1,301.81073,395.48947,PYP 4 Corridor PYP 4 B - STEAM Studio Junction,corridor
+corridor_ff_63,1,281.42334,396.00562,PYP 4 Corridor SOR 2 - PYP 4 A Junction,corridor
+corridor_ff_64,1,256.90686,396.00562,PYP 4 Corridor PYP 4 E - PYP 4 D Junction,corridor
+corridor_ff_65,1,249.29385,395.87656,PYP 4 Corridor PYP 4 F - PYP 4 G Junction,corridor
+corridor_ff_66,1,192.38982,383.61835,PYP 4 Corridor PYP 4 J - PYP 4 H Junction,corridor
+corridor_ff_67,1,185.55101,380.52151,PYP 4 Corridor PYP 4 K - PYP 4 I Junction,corridor
+corridor_ff_68,1,169.03465,369.1665,PYP 4 Corridor Exit,corridor
+stair_ff_5,1,302.32684,151.35698,Staircase Main (FF),stair
+stair_ff_11,1,225.55157,221.55151,Staircase 11 (PYP 2 Corridor - First Floor),stair
+stair__ff_16,1,164.90556,252.39067,Staircase 16 (FM - First Floor),stair
+stair_ff_17,1,163.09908,370.97299,Staircase 17 (GRE - First Floor),stair
+stair_ff_12,1,226.84192,401.16696,Staircase 12 (KG 2 Corridor - First Floor),stair
+room_ff_150,1,209.68039,404.65088,Washroom (PYP 4 Corridor),room
