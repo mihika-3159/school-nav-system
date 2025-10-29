@@ -1,0 +1,15 @@
+:root{
+  --navy: #06283D;
+  --gold: #C89B3C;
+  --muted: #6b7280;
+}
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #fff; color: #0f172a;}
+.text-navy { color: var(--navy); }
+.bg-navy { background: var(--navy); }
+.bg-gold { background: var(--gold); color: #fff; }
+.gold { color: var(--gold); }
+button:focus { outline: 3px solid rgba(200,155,60,0.15); outline-offset: 2px; }
+.map-frame { aspect-ratio: 4/3; min-height: 420px; max-height: 78vh; }
+.overlay-svg { z-index: 40; }
+svg .route-shadow { filter: drop-shadow(0 6px 18px rgba(2,6,23,0.12)); }
+.navy { background: var(--navy); color: white; }
