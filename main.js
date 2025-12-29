@@ -15,10 +15,12 @@ const FLOOR_FILES = {
 };
 const NODES_CSV = 'school-nav-data/nodes_all.csv';
 const EDGES_CSV = 'school-nav-data/edges_all.csv';
+const CORRIDOR_PATH_TYPES = new Set(['corridor','stair','lift','entrance']);
 
 let nodes = []; // loaded nodes_all
 let edges = [];
 let graph = {};
+let nodeDegree = {};
 let currentFloor = 'G';
 let lastPath = null;
 let mapBaseIsSvg = false; // computed at load
@@ -41,14 +43,18 @@ async function loadCSV(url){
 /* ---------------- graph ---------------- */
 function buildGraph(){
   graph = {};
+  nodeDegree = {};
   nodes.forEach(n => graph[n.id] = []);
   edges.forEach(e => {
     if (!graph[e.from]) graph[e.from] = [];
     if (!graph[e.to]) graph[e.to] = [];
-    const w = (e.distance && !isNaN(parseFloat(e.distance))) ? parseFloat(e.distance) : euclidDist(e.from, e.to);
+    const raw = parseFloat(e.distance);
+    const w = (isFinite(raw) && raw > 0) ? raw : euclidDist(e.from, e.to);
     const acc = String(e.accessible || 'true').toLowerCase() === 'true';
     graph[e.from].push({ to: e.to, weight: w, accessible: acc });
     graph[e.to].push({ to: e.from, weight: w, accessible: acc });
+    nodeDegree[e.from] = (nodeDegree[e.from] || 0) + 1;
+    nodeDegree[e.to] = (nodeDegree[e.to] || 0) + 1;
   });
 }
 
@@ -63,11 +69,13 @@ function euclidDist(aId,bId){
 function heuristic(a,b){ return euclidDist(a,b); }
 function aStar(start, goal, opts = {}){
   const avoidStairs = !!opts.avoidStairs;
-  if (!graph[start] || !graph[goal]) return [];
+  const allowedTypes = opts.allowedTypes || null;
+  const graphData = opts.graphData || graph;
+  if (!graphData[start] || !graphData[goal]) return [];
   const open = new Set([start]);
   const came = {};
   const gScore = {}, fScore = {};
-  Object.keys(graph).forEach(k => { gScore[k]=Infinity; fScore[k]=Infinity; });
+  Object.keys(graphData).forEach(k => { gScore[k]=Infinity; fScore[k]=Infinity; });
   gScore[start]=0; fScore[start] = heuristic(start, goal);
   const pq = [{id:start, f:fScore[start]}];
 
@@ -80,8 +88,13 @@ function aStar(start, goal, opts = {}){
       while(cur){ path.push(cur); cur = came[cur]; }
       return path.reverse();
     }
-    for(const e of graph[current] || []){
+    for(const e of graphData[current] || []){
       if (avoidStairs && e.accessible === false) continue;
+      const neighborNode = getNode(e.to);
+      if (allowedTypes && neighborNode){
+        const nodeAllowed = allowedTypes.has(neighborNode.type) || e.to === goal || current === start;
+        if (!nodeAllowed) continue;
+      }
       const tentative = gScore[current] + e.weight;
       if (tentative < gScore[e.to]){
         came[e.to] = current;
@@ -165,8 +178,14 @@ function drawMarkersForCurrentFloor(){
   const overlay = $('#overlay');
   overlay.innerHTML = '';
 
+  const minimalMode = $('#minimalToggle') ? $('#minimalToggle').checked : false;
   const floorNodes = nodes.filter(n => String(n.floor) === String(currentFloor));
   floorNodes.forEach(n => {
+    const isConnector = ['stair','lift','entrance'].includes(n.type);
+    const onPath = lastPath && lastPath.includes(n.id);
+    const isSelected = n.id === $('#startSearch').dataset.nodeId || n.id === $('#endSearch').dataset.nodeId;
+    if (minimalMode && !isConnector && !onPath && !isSelected) return;
+    const showHoverLabel = isConnector || isSelected || !minimalMode;
     // by default exclude corridor from being prominent; still drawn but not in search (config)
     const {cx, cy} = scaleXYToOverlay(n.x, n.y);
     // group for nice hit area
@@ -176,9 +195,13 @@ function drawMarkersForCurrentFloor(){
 
     // circle
     const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circle.setAttribute('r', 8);
-    circle.setAttribute('fill', n.type==='lift' || n.type==='entrance' ? 'var(--gold)' : 'var(--navy)');
-    circle.setAttribute('class','marker');
+    const radius = isConnector ? 8 : onPath || isSelected ? 6 : 5;
+    circle.setAttribute('r', radius);
+    const fill = isConnector
+      ? (n.type==='lift' || n.type==='entrance' ? 'var(--gold)' : 'var(--navy)')
+      : onPath || isSelected ? 'var(--cyan)' : 'var(--navy-muted)';
+    circle.setAttribute('fill', fill);
+    circle.setAttribute('class', `marker ${onPath ? 'marker-path' : isConnector ? 'marker-connector' : 'marker-muted'}`);
     g.appendChild(circle);
 
     // small label (hidden, shown on hover)
@@ -191,8 +214,8 @@ function drawMarkersForCurrentFloor(){
     g.appendChild(txt);
 
     // hover handlers
-    g.addEventListener('mouseenter', ()=> txt.style.display = 'block');
-    g.addEventListener('mouseleave', ()=> txt.style.display = 'none');
+    g.addEventListener('mouseenter', ()=> { if (showHoverLabel) txt.style.display = 'block'; });
+    g.addEventListener('mouseleave', ()=> { if (showHoverLabel) txt.style.display = 'none'; });
 
     // click handler: set start or end depending on last interaction
     g.addEventListener('click', (ev) => {
@@ -310,12 +333,21 @@ function generateDirections(path){
   return out;
 }
 
+function findRoute(startId, endId, opts = {}){
+  // Prefer corridor/stair/lift/entrance traversal for cleaner wayfinding,
+  // but fall back to the full graph if needed.
+  const corridorFirst = aStar(startId, endId, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES });
+  if (corridorFirst && corridorFirst.length) return corridorFirst;
+  return aStar(startId, endId, opts);
+}
+
 /* --------------- Search (typeahead) --------------- */
 function filterNodesForSearch(query, role){ // role = 'start'|'end'
   query = (query||'').trim().toLowerCase();
   const includeCorridors = !!$('#includeCorridors').checked;
   return nodes.filter(n => {
     if (String(n.floor) !== String(currentFloor)) return false; // only show same-floor matches first
+    if ((nodeDegree[n.id] || 0) === 0) return false; // exclude isolated/unroutable
     if (!includeCorridors && (n.type||'').toLowerCase() === 'corridor') return false;
     const label = (n.name || n.id || '').toLowerCase();
     return label.includes(query);
@@ -362,12 +394,13 @@ $('#routeBtn').addEventListener('click', () => {
   const avoid = $('#accessibleToggle').checked;
   if (!startId || !endId) { alert('Please pick both start and destination from suggestions (click the result).'); return; }
   if (startId === endId) { alert('You are already there!'); return; }
+  if ((nodeDegree[startId] || 0) === 0 || (nodeDegree[endId] || 0) === 0) { alert('Selected point is not connected to the map data. Please choose another nearby point.'); return; }
 
-  const path = aStar(startId, endId, { avoidStairs: avoid });
+  const path = findRoute(startId, endId, { avoidStairs: avoid });
   if (!path || path.length===0){ alert('No route found — check edges.'); return; }
   lastPath = path;
   // if path includes nodes on other floors, keep current floor as floor of start
-  drawRoute(path);
+  drawMarkersForCurrentFloor();
   const directions = generateDirections(path);
   $('#directionsList').innerHTML = directions.map(s=>`<li>${s}</li>`).join('');
   $('#summaryText').textContent = `${path.length} nodes • ${path.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
@@ -385,10 +418,13 @@ $('#clearBtn').addEventListener('click', ()=> {
   history.replaceState(null,'','/');
 });
 
-$('#copyLink').addEventListener('click', async ()=>{
+$('#copyLink').addEventListener('click', async ()=>{ 
   try { await navigator.clipboard.writeText(location.href); $('#shareSuccess').classList.remove('hidden'); setTimeout(()=>$('#shareSuccess').classList.add('hidden'),1300); } catch(e){ alert('Copy failed'); }
 });
 $('#printBtn').addEventListener('click', ()=> window.print());
+if ($('#minimalToggle')){
+  $('#minimalToggle').addEventListener('change', ()=> drawMarkersForCurrentFloor());
+}
 
 $('#prevFloor').addEventListener('click', ()=> {
   const idx = FLOOR_ORDER.indexOf(currentFloor);
