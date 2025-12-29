@@ -15,6 +15,7 @@ const FLOOR_FILES = {
 };
 const NODES_CSV = 'school-nav-data/nodes_all.csv';
 const EDGES_CSV = 'school-nav-data/edges_all.csv';
+const CORRIDOR_PATH_TYPES = new Set(['corridor','stair','lift','entrance']);
 
 let nodes = []; // loaded nodes_all
 let edges = [];
@@ -333,8 +334,10 @@ function generateDirections(path){
 }
 
 function findRoute(startId, endId, opts = {}){
-  // Always compute on the full graph to guarantee the true shortest path.
-  // Accessibility (avoid stairs) still respected via opts.avoidStairs.
+  // Prefer corridor/stair/lift/entrance traversal for cleaner wayfinding,
+  // but fall back to the full graph if needed.
+  const corridorFirst = aStar(startId, endId, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES });
+  if (corridorFirst && corridorFirst.length) return corridorFirst;
   return aStar(startId, endId, opts);
 }
 
