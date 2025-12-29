@@ -19,6 +19,7 @@ const EDGES_CSV = 'school-nav-data/edges_all.csv';
 let nodes = []; // loaded nodes_all
 let edges = [];
 let graph = {};
+let nodeDegree = {};
 let currentFloor = 'G';
 let lastPath = null;
 let mapBaseIsSvg = false; // computed at load
@@ -41,14 +42,18 @@ async function loadCSV(url){
 /* ---------------- graph ---------------- */
 function buildGraph(){
   graph = {};
+  nodeDegree = {};
   nodes.forEach(n => graph[n.id] = []);
   edges.forEach(e => {
     if (!graph[e.from]) graph[e.from] = [];
     if (!graph[e.to]) graph[e.to] = [];
-    const w = (e.distance && !isNaN(parseFloat(e.distance))) ? parseFloat(e.distance) : euclidDist(e.from, e.to);
+    const raw = parseFloat(e.distance);
+    const w = (isFinite(raw) && raw > 0) ? raw : euclidDist(e.from, e.to);
     const acc = String(e.accessible || 'true').toLowerCase() === 'true';
     graph[e.from].push({ to: e.to, weight: w, accessible: acc });
     graph[e.to].push({ to: e.from, weight: w, accessible: acc });
+    nodeDegree[e.from] = (nodeDegree[e.from] || 0) + 1;
+    nodeDegree[e.to] = (nodeDegree[e.to] || 0) + 1;
   });
 }
 
@@ -339,6 +344,7 @@ function filterNodesForSearch(query, role){ // role = 'start'|'end'
   const includeCorridors = !!$('#includeCorridors').checked;
   return nodes.filter(n => {
     if (String(n.floor) !== String(currentFloor)) return false; // only show same-floor matches first
+    if ((nodeDegree[n.id] || 0) === 0) return false; // exclude isolated/unroutable
     if (!includeCorridors && (n.type||'').toLowerCase() === 'corridor') return false;
     const label = (n.name || n.id || '').toLowerCase();
     return label.includes(query);
@@ -385,6 +391,7 @@ $('#routeBtn').addEventListener('click', () => {
   const avoid = $('#accessibleToggle').checked;
   if (!startId || !endId) { alert('Please pick both start and destination from suggestions (click the result).'); return; }
   if (startId === endId) { alert('You are already there!'); return; }
+  if ((nodeDegree[startId] || 0) === 0 || (nodeDegree[endId] || 0) === 0) { alert('Selected point is not connected to the map data. Please choose another nearby point.'); return; }
 
   const path = findRoute(startId, endId, { avoidStairs: avoid });
   if (!path || path.length===0){ alert('No route found — check edges.'); return; }
