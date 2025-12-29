@@ -26,6 +26,14 @@ EDGES_CSV = ROOT / "school-nav-data" / "edges_all.csv"
 
 CORRIDOR_NEIGHBORS = 5
 NODE_TO_CORRIDOR_NEIGHBORS = 3
+OUTSIDE_NODE_IDS = {
+    # nodes physically outside campus; must connect via entrances
+    "room_gf_10",   # Canteen
+    "room_gf_101",  # Multipurpose Hall
+    "room_gf_104",  # Main Canteen
+    "room_gf_108",  # Main Field
+    "room_gf_125",  # Bus Bay
+}
 
 
 def load_nodes():
@@ -114,6 +122,7 @@ def main():
 
     for floor, ids in by_floor.items():
         corridors = [nid for nid in ids if nodes[nid]["type"] == "corridor"]
+        entrances = [nid for nid in ids if nodes[nid]["type"] == "entrance"]
         non_corridors = [nid for nid in ids if nodes[nid]["type"] != "corridor"]
 
         # corridor <-> corridor
@@ -125,10 +134,15 @@ def main():
         for nid in non_corridors:
             if not corridors:
                 continue
-            for dist, cid in nearest(nid, corridors, nodes, NODE_TO_CORRIDOR_NEIGHBORS):
-                # stairs marked inaccessible, others accessible
-                accessible = nodes[nid]["type"] != "stair"
-                add_edge(edges, nid, cid, dist, accessible=accessible)
+            if nid in OUTSIDE_NODE_IDS and entrances:
+                # Outside nodes must enter via entrances first.
+                for dist, ent in nearest(nid, entrances, nodes, NODE_TO_CORRIDOR_NEIGHBORS):
+                    add_edge(edges, nid, ent, dist, accessible=True)
+            else:
+                for dist, cid in nearest(nid, corridors, nodes, NODE_TO_CORRIDOR_NEIGHBORS):
+                    # stairs marked inaccessible, others accessible
+                    accessible = nodes[nid]["type"] != "stair"
+                    add_edge(edges, nid, cid, dist, accessible=accessible)
 
         # ensure intra-floor connectivity by stitching components
         connect_components(ids, edges, nodes)
