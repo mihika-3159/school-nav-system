@@ -1,6 +1,8 @@
 :root{
   --navy: #06283D;
   --gold: #C89B3C;
+  --cyan: #0ea5e9;
+  --navy-muted: #1f2937;
   --muted: #6b7280;
 }
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #fff; color: #0f172a;}
@@ -21,8 +23,12 @@ button:focus { outline: 3px solid rgba(200,155,60,0.15); outline-offset: 2px; }
 .result-meta { font-size: 11px; color: #6b7280; }
 
 /* overlay markers */
-.marker { cursor:pointer; stroke:white; stroke-width:1.5px; }
+.marker { cursor:pointer; stroke:white; stroke-width:1.5px; transition: transform 120ms ease, opacity 120ms ease; }
+.marker-connector { filter: drop-shadow(0 2px 4px rgba(6,40,61,0.2)); }
+.marker-path { fill: var(--cyan); opacity: 0.9; }
+.marker-muted { opacity: 0.55; }
 .marker-label { pointer-events:none; font-size:12px; font-weight:600; fill:#06283D; transform: translateY(-10px); }
+.marker:hover { transform: scale(1.08); opacity: 1; }
 
 /* route style */
 .route-line { fill:none; stroke:var(--gold); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
@@ -33,4 +39,3 @@ button:focus { outline: 3px solid rgba(200,155,60,0.15); outline-offset: 2px; }
   .map-frame { min-height: 320px; }
   aside.w-64 { display:none; }
 }
-
