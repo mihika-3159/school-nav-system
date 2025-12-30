@@ -66,6 +66,31 @@ function euclidDist(aId,bId){
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+function nearestNodeOfType(sourceId, typeSet){
+  const src = getNode(sourceId);
+  if (!src) return null;
+  let best = null;
+  nodes.forEach(n => {
+    if (n.floor !== src.floor) return;
+    if (!typeSet.has(n.type)) return;
+    const d = euclidDist(sourceId, n.id);
+    if (best === null || d < best.d) best = { id: n.id, d };
+  });
+  return best;
+}
+
+function anchorToCorridorLike(nodeId){
+  const n = getNode(nodeId);
+  if (!n) return nodeId;
+  if (CORRIDOR_PATH_TYPES.has(n.type)) return nodeId;
+  if (OUTSIDE_NODE_IDS.has(nodeId)) {
+    const nearestEntrance = nearestNodeOfType(nodeId, new Set(['entrance']));
+    if (nearestEntrance) return nearestEntrance.id;
+  }
+  const nearestCorr = nearestNodeOfType(nodeId, new Set(['corridor']));
+  return nearestCorr ? nearestCorr.id : nodeId;
+}
+
 /* ---------------- A* ---------------- */
 function heuristic(a,b){ return euclidDist(a,b); }
 function aStar(start, goal, opts = {}){
@@ -75,8 +100,8 @@ function aStar(start, goal, opts = {}){
   if (!graphData[start] || !graphData[goal]) return [];
   const startNode = getNode(start);
   const goalNode = getNode(goal);
-  const needVertical = startNode && goalNode && startNode.floor !== goalNode.floor;
-  const involvesOutside = OUTSIDE_NODE_IDS.has(start) || OUTSIDE_NODE_IDS.has(goal) || (startNode?.type === 'entrance') || (goalNode?.type === 'entrance');
+  const needVertical = opts.needVertical ?? (startNode && goalNode && startNode.floor !== goalNode.floor);
+  const involvesOutside = opts.involvesOutside ?? (OUTSIDE_NODE_IDS.has(start) || OUTSIDE_NODE_IDS.has(goal) || (startNode?.type === 'entrance') || (goalNode?.type === 'entrance'));
   const open = new Set([start]);
   const came = {};
   const gScore = {}, fScore = {};
@@ -348,11 +373,27 @@ function generateDirections(path){
 }
 
 function findRoute(startId, endId, opts = {}){
-  // Prefer corridor/stair/lift/entrance traversal for cleaner wayfinding,
-  // but fall back to the full graph if needed.
-  const corridorFirst = aStar(startId, endId, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES });
-  if (corridorFirst && corridorFirst.length) return corridorFirst;
-  return aStar(startId, endId, opts);
+  const startAnchor = anchorToCorridorLike(startId);
+  const endAnchor = anchorToCorridorLike(endId);
+  const anchorStartNode = getNode(startAnchor);
+  const anchorEndNode = getNode(endAnchor);
+  const needVertical = anchorStartNode && anchorEndNode && anchorStartNode.floor !== anchorEndNode.floor;
+  const involvesOutside = OUTSIDE_NODE_IDS.has(startId) || OUTSIDE_NODE_IDS.has(endId) || anchorStartNode?.type === 'entrance' || anchorEndNode?.type === 'entrance';
+
+  // Corridor-first path between anchors
+  const corridorPath = aStar(startAnchor, endAnchor, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES, needVertical, involvesOutside });
+  if (!corridorPath || corridorPath.length === 0) return [];
+
+  const route = [];
+  route.push(startId);
+  if (startAnchor !== startId) route.push(startAnchor);
+  // avoid duplicating anchor
+  for (let i=0;i<corridorPath.length;i++){
+    if (i===0 && corridorPath[i]===route[route.length-1]) continue;
+    route.push(corridorPath[i]);
+  }
+  if (endAnchor !== endId) route.push(endId);
+  return route;
 }
 
 /* --------------- Search (typeahead) --------------- */
