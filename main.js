@@ -16,6 +16,7 @@ const FLOOR_FILES = {
 const NODES_CSV = 'school-nav-data/nodes_all.csv';
 const EDGES_CSV = 'school-nav-data/edges_all.csv';
 const CORRIDOR_PATH_TYPES = new Set(['corridor','stair','lift','entrance']);
+const OUTSIDE_NODE_IDS = new Set(['room_gf_125','room_gf_108','room_gf_104','room_gf_101','room_gf_10']);
 
 let nodes = []; // loaded nodes_all
 let edges = [];
@@ -72,6 +73,10 @@ function aStar(start, goal, opts = {}){
   const allowedTypes = opts.allowedTypes || null;
   const graphData = opts.graphData || graph;
   if (!graphData[start] || !graphData[goal]) return [];
+  const startNode = getNode(start);
+  const goalNode = getNode(goal);
+  const needVertical = startNode && goalNode && startNode.floor !== goalNode.floor;
+  const involvesOutside = OUTSIDE_NODE_IDS.has(start) || OUTSIDE_NODE_IDS.has(goal) || (startNode?.type === 'entrance') || (goalNode?.type === 'entrance');
   const open = new Set([start]);
   const came = {};
   const gScore = {}, fScore = {};
@@ -92,7 +97,16 @@ function aStar(start, goal, opts = {}){
       if (avoidStairs && e.accessible === false) continue;
       const neighborNode = getNode(e.to);
       if (allowedTypes && neighborNode){
-        const nodeAllowed = allowedTypes.has(neighborNode.type) || e.to === goal || current === start;
+        let nodeAllowed = allowedTypes.has(neighborNode.type) || e.to === goal || current === start;
+        if (nodeAllowed && allowedTypes === CORRIDOR_PATH_TYPES){
+          if (neighborNode.type === 'stair' || neighborNode.type === 'lift'){
+            const crossesFloor = neighborNode.floor !== getNode(current)?.floor;
+            if (!needVertical && !crossesFloor) nodeAllowed = false;
+          }
+          if (neighborNode.type === 'entrance' && !involvesOutside && current !== start && e.to !== goal){
+            nodeAllowed = false;
+          }
+        }
         if (!nodeAllowed) continue;
       }
       const tentative = gScore[current] + e.weight;
