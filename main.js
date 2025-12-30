@@ -23,7 +23,7 @@ let edges = [];
 let graph = {};
 let nodeDegree = {};
 let currentFloor = 'G';
-let lastPath = null;
+let lastPath = null; // { line: [], start: id, end: id }
 let mapBaseIsSvg = false; // computed at load
 let mapNaturalSize = {width:1000, height:800}; // fallback, updated if image/svg viewbox known
 
@@ -221,7 +221,7 @@ function drawMarkersForCurrentFloor(){
   const floorNodes = nodes.filter(n => String(n.floor) === String(currentFloor));
   floorNodes.forEach(n => {
     const isConnector = ['stair','lift','entrance'].includes(n.type);
-    const onPath = lastPath && lastPath.includes(n.id);
+    const onPath = lastPath && lastPath.line && lastPath.line.includes(n.id);
     const isSelected = n.id === $('#startSearch').dataset.nodeId || n.id === $('#endSearch').dataset.nodeId;
     if (minimalMode && !isConnector && !onPath && !isSelected) return;
     const showHoverLabel = isConnector || isSelected || !minimalMode;
@@ -276,16 +276,17 @@ function drawMarkersForCurrentFloor(){
   });
 
   // if lastPath exists, draw it on top
-  if (lastPath && lastPath.length) drawRoute(lastPath);
+  if (lastPath && lastPath.line && lastPath.line.length) drawRoute(lastPath);
 }
 
-function drawRoute(path){
+function drawRoute(pathObj){
   // draw full route scaled to overlay
   const overlay = $('#overlay');
   // remove existing route lines first
   [...overlay.querySelectorAll('.route-line, .route-shadow')].forEach(n=>n.remove());
 
-  if (!path || path.length === 0) return;
+  if (!pathObj || !pathObj.line || pathObj.line.length === 0) return;
+  const path = pathObj.line;
 
   // compute scaled points
   const pts = path.map(id => {
@@ -306,7 +307,7 @@ function drawRoute(path){
   overlay.appendChild(line);
 
   // markers for start and end (drawn at actual node positions)
-  const s = getNode(path[0]), e = getNode(path[path.length-1]);
+  const s = getNode(pathObj.start), e = getNode(pathObj.end);
   if (s){
     const p = scaleXYToOverlay(s.x, s.y);
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
@@ -384,16 +385,11 @@ function findRoute(startId, endId, opts = {}){
   const corridorPath = aStar(startAnchor, endAnchor, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES, needVertical, involvesOutside });
   if (!corridorPath || corridorPath.length === 0) return [];
 
-  const route = [];
-  route.push(startId);
-  if (startAnchor !== startId) route.push(startAnchor);
-  // avoid duplicating anchor
-  for (let i=0;i<corridorPath.length;i++){
-    if (i===0 && corridorPath[i]===route[route.length-1]) continue;
-    route.push(corridorPath[i]);
-  }
-  if (endAnchor !== endId) route.push(endId);
-  return route;
+  return {
+    line: corridorPath,
+    start: startId,
+    end: endId
+  };
 }
 
 /* --------------- Search (typeahead) --------------- */
@@ -451,14 +447,15 @@ $('#routeBtn').addEventListener('click', () => {
   if (startId === endId) { alert('You are already there!'); return; }
   if ((nodeDegree[startId] || 0) === 0 || (nodeDegree[endId] || 0) === 0) { alert('Selected point is not connected to the map data. Please choose another nearby point.'); return; }
 
-  const path = findRoute(startId, endId, { avoidStairs: avoid });
-  if (!path || path.length===0){ alert('No route found — check edges.'); return; }
-  lastPath = path;
+  const pathObj = findRoute(startId, endId, { avoidStairs: avoid });
+  if (!pathObj || !pathObj.line || pathObj.line.length===0){ alert('No route found — check edges.'); return; }
+  lastPath = pathObj;
   // if path includes nodes on other floors, keep current floor as floor of start
   drawMarkersForCurrentFloor();
-  const directions = generateDirections(path);
+  const fullPathForDirections = [pathObj.start, ...pathObj.line.filter((n,i)=> !(i===0 && n===pathObj.start)), ...(pathObj.end !== pathObj.line[pathObj.line.length-1] ? [pathObj.end] : [])];
+  const directions = generateDirections(fullPathForDirections);
   $('#directionsList').innerHTML = directions.map(s=>`<li>${s}</li>`).join('');
-  $('#summaryText').textContent = `${path.length} nodes • ${path.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
+  $('#summaryText').textContent = `${pathObj.line.length} nodes • ${pathObj.line.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
   // update URL params
   const params = new URLSearchParams();
   params.set('start', startId); params.set('end', endId); params.set('floor', getNode(startId).floor || currentFloor);
