@@ -82,7 +82,7 @@ function nearestNodeOfType(sourceId, typeSet){
 function anchorToCorridorLike(nodeId){
   const n = getNode(nodeId);
   if (!n) return nodeId;
-  if (CORRIDOR_PATH_TYPES.has(n.type)) return nodeId;
+  if (CORRIDOR_PATH_TYPES.has(n.type) || n.type === 'room') return nodeId; // keep rooms as anchors but they'll be projected in rendering/directions
   if (OUTSIDE_NODE_IDS.has(nodeId)) {
     const nearestEntrance = nearestNodeOfType(nodeId, new Set(['entrance']));
     if (nearestEntrance) return nearestEntrance.id;
