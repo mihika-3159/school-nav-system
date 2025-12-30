@@ -23,7 +23,7 @@ let edges = [];
 let graph = {};
 let nodeDegree = {};
 let currentFloor = 'G';
-let lastPath = null; // { line: [], start: id, end: id }
+let lastPath = null; // { line: [], start: id, end: id, originalStart, originalEnd }
 let mapBaseIsSvg = false; // computed at load
 let mapNaturalSize = {width:1000, height:800}; // fallback, updated if image/svg viewbox known
 
@@ -306,7 +306,7 @@ function drawRoute(pathObj){
   line.setAttribute('class','route-line');
   overlay.appendChild(line);
 
-  // markers for start and end (drawn at actual node positions)
+  // markers for start and end (drawn at anchor positions)
   const s = getNode(pathObj.start), e = getNode(pathObj.end);
   if (s){
     const p = scaleXYToOverlay(s.x, s.y);
@@ -387,8 +387,10 @@ function findRoute(startId, endId, opts = {}){
 
   return {
     line: corridorPath,
-    start: startId,
-    end: endId
+    start: startAnchor,
+    end: endAnchor,
+    originalStart: startId,
+    originalEnd: endId
   };
 }
 
@@ -452,8 +454,7 @@ $('#routeBtn').addEventListener('click', () => {
   lastPath = pathObj;
   // if path includes nodes on other floors, keep current floor as floor of start
   drawMarkersForCurrentFloor();
-  const fullPathForDirections = [pathObj.start, ...pathObj.line.filter((n,i)=> !(i===0 && n===pathObj.start)), ...(pathObj.end !== pathObj.line[pathObj.line.length-1] ? [pathObj.end] : [])];
-  const directions = generateDirections(fullPathForDirections);
+  const directions = generateDirections(pathObj.line);
   $('#directionsList').innerHTML = directions.map(s=>`<li>${s}</li>`).join('');
   $('#summaryText').textContent = `${pathObj.line.length} nodes • ${pathObj.line.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
   // update URL params
