@@ -15,12 +15,15 @@ const FLOOR_FILES = {
 };
 const NODES_CSV = 'school-nav-data/nodes_all.csv';
 const EDGES_CSV = 'school-nav-data/edges_all.csv';
+const CORRIDOR_PATH_TYPES = new Set(['corridor','stair','lift','entrance']);
+const OUTSIDE_NODE_IDS = new Set(['room_gf_125','room_gf_108','room_gf_104','room_gf_101','room_gf_10']);
 
 let nodes = []; // loaded nodes_all
 let edges = [];
 let graph = {};
+let nodeDegree = {};
 let currentFloor = 'G';
-let lastPath = null;
+let lastPath = null; // { line: [], start: id, end: id, originalStart, originalEnd }
 let mapBaseIsSvg = false; // computed at load
 let mapNaturalSize = {width:1000, height:800}; // fallback, updated if image/svg viewbox known
 
@@ -41,14 +44,18 @@ async function loadCSV(url){
 /* ---------------- graph ---------------- */
 function buildGraph(){
   graph = {};
+  nodeDegree = {};
   nodes.forEach(n => graph[n.id] = []);
   edges.forEach(e => {
     if (!graph[e.from]) graph[e.from] = [];
     if (!graph[e.to]) graph[e.to] = [];
-    const w = (e.distance && !isNaN(parseFloat(e.distance))) ? parseFloat(e.distance) : euclidDist(e.from, e.to);
+    const raw = parseFloat(e.distance);
+    const w = (isFinite(raw) && raw > 0) ? raw : euclidDist(e.from, e.to);
     const acc = String(e.accessible || 'true').toLowerCase() === 'true';
     graph[e.from].push({ to: e.to, weight: w, accessible: acc });
     graph[e.to].push({ to: e.from, weight: w, accessible: acc });
+    nodeDegree[e.from] = (nodeDegree[e.from] || 0) + 1;
+    nodeDegree[e.to] = (nodeDegree[e.to] || 0) + 1;
   });
 }
 
@@ -59,15 +66,46 @@ function euclidDist(aId,bId){
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+function nearestNodeOfType(sourceId, typeSet){
+  const src = getNode(sourceId);
+  if (!src) return null;
+  let best = null;
+  nodes.forEach(n => {
+    if (n.floor !== src.floor) return;
+    if (!typeSet.has(n.type)) return;
+    const d = euclidDist(sourceId, n.id);
+    if (best === null || d < best.d) best = { id: n.id, d };
+  });
+  return best;
+}
+
+function anchorToCorridorLike(nodeId){
+  const n = getNode(nodeId);
+  if (!n) return nodeId;
+  if (CORRIDOR_PATH_TYPES.has(n.type) || n.type === 'room') return nodeId; // keep rooms as anchors but they'll be projected in rendering/directions
+  if (OUTSIDE_NODE_IDS.has(nodeId)) {
+    const nearestEntrance = nearestNodeOfType(nodeId, new Set(['entrance']));
+    if (nearestEntrance) return nearestEntrance.id;
+  }
+  const nearestCorr = nearestNodeOfType(nodeId, new Set(['corridor']));
+  return nearestCorr ? nearestCorr.id : nodeId;
+}
+
 /* ---------------- A* ---------------- */
 function heuristic(a,b){ return euclidDist(a,b); }
 function aStar(start, goal, opts = {}){
   const avoidStairs = !!opts.avoidStairs;
-  if (!graph[start] || !graph[goal]) return [];
+  const allowedTypes = opts.allowedTypes || null;
+  const graphData = opts.graphData || graph;
+  if (!graphData[start] || !graphData[goal]) return [];
+  const startNode = getNode(start);
+  const goalNode = getNode(goal);
+  const needVertical = opts.needVertical ?? (startNode && goalNode && startNode.floor !== goalNode.floor);
+  const involvesOutside = opts.involvesOutside ?? (OUTSIDE_NODE_IDS.has(start) || OUTSIDE_NODE_IDS.has(goal) || (startNode?.type === 'entrance') || (goalNode?.type === 'entrance'));
   const open = new Set([start]);
   const came = {};
   const gScore = {}, fScore = {};
-  Object.keys(graph).forEach(k => { gScore[k]=Infinity; fScore[k]=Infinity; });
+  Object.keys(graphData).forEach(k => { gScore[k]=Infinity; fScore[k]=Infinity; });
   gScore[start]=0; fScore[start] = heuristic(start, goal);
   const pq = [{id:start, f:fScore[start]}];
 
@@ -80,8 +118,22 @@ function aStar(start, goal, opts = {}){
       while(cur){ path.push(cur); cur = came[cur]; }
       return path.reverse();
     }
-    for(const e of graph[current] || []){
+    for(const e of graphData[current] || []){
       if (avoidStairs && e.accessible === false) continue;
+      const neighborNode = getNode(e.to);
+      if (allowedTypes && neighborNode){
+        let nodeAllowed = allowedTypes.has(neighborNode.type) || e.to === goal || current === start;
+        if (nodeAllowed && allowedTypes === CORRIDOR_PATH_TYPES){
+          if (neighborNode.type === 'stair' || neighborNode.type === 'lift'){
+            const crossesFloor = neighborNode.floor !== getNode(current)?.floor;
+            if (!needVertical && !crossesFloor) nodeAllowed = false;
+          }
+          if (neighborNode.type === 'entrance' && !involvesOutside && current !== start && e.to !== goal){
+            nodeAllowed = false;
+          }
+        }
+        if (!nodeAllowed) continue;
+      }
       const tentative = gScore[current] + e.weight;
       if (tentative < gScore[e.to]){
         came[e.to] = current;
@@ -165,8 +217,14 @@ function drawMarkersForCurrentFloor(){
   const overlay = $('#overlay');
   overlay.innerHTML = '';
 
+  const minimalMode = $('#minimalToggle') ? $('#minimalToggle').checked : false;
   const floorNodes = nodes.filter(n => String(n.floor) === String(currentFloor));
   floorNodes.forEach(n => {
+    const isConnector = ['stair','lift','entrance'].includes(n.type);
+    const onPath = lastPath && lastPath.line && lastPath.line.includes(n.id);
+    const isSelected = n.id === $('#startSearch').dataset.nodeId || n.id === $('#endSearch').dataset.nodeId;
+    if (minimalMode && !isConnector && !onPath && !isSelected) return;
+    const showHoverLabel = isConnector || isSelected || !minimalMode;
     // by default exclude corridor from being prominent; still drawn but not in search (config)
     const {cx, cy} = scaleXYToOverlay(n.x, n.y);
     // group for nice hit area
@@ -176,9 +234,13 @@ function drawMarkersForCurrentFloor(){
 
     // circle
     const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circle.setAttribute('r', 8);
-    circle.setAttribute('fill', n.type==='lift' || n.type==='entrance' ? 'var(--gold)' : 'var(--navy)');
-    circle.setAttribute('class','marker');
+    const radius = isConnector ? 8 : onPath || isSelected ? 6 : 5;
+    circle.setAttribute('r', radius);
+    const fill = isConnector
+      ? (n.type==='lift' || n.type==='entrance' ? 'var(--gold)' : 'var(--navy)')
+      : onPath || isSelected ? 'var(--cyan)' : 'var(--navy-muted)';
+    circle.setAttribute('fill', fill);
+    circle.setAttribute('class', `marker ${onPath ? 'marker-path' : isConnector ? 'marker-connector' : 'marker-muted'}`);
     g.appendChild(circle);
 
     // small label (hidden, shown on hover)
@@ -191,8 +253,8 @@ function drawMarkersForCurrentFloor(){
     g.appendChild(txt);
 
     // hover handlers
-    g.addEventListener('mouseenter', ()=> txt.style.display = 'block');
-    g.addEventListener('mouseleave', ()=> txt.style.display = 'none');
+    g.addEventListener('mouseenter', ()=> { if (showHoverLabel) txt.style.display = 'block'; });
+    g.addEventListener('mouseleave', ()=> { if (showHoverLabel) txt.style.display = 'none'; });
 
     // click handler: set start or end depending on last interaction
     g.addEventListener('click', (ev) => {
@@ -214,16 +276,17 @@ function drawMarkersForCurrentFloor(){
   });
 
   // if lastPath exists, draw it on top
-  if (lastPath && lastPath.length) drawRoute(lastPath);
+  if (lastPath && lastPath.line && lastPath.line.length) drawRoute(lastPath);
 }
 
-function drawRoute(path){
+function drawRoute(pathObj){
   // draw full route scaled to overlay
   const overlay = $('#overlay');
   // remove existing route lines first
   [...overlay.querySelectorAll('.route-line, .route-shadow')].forEach(n=>n.remove());
 
-  if (!path || path.length === 0) return;
+  if (!pathObj || !pathObj.line || pathObj.line.length === 0) return;
+  const path = pathObj.line;
 
   // compute scaled points
   const pts = path.map(id => {
@@ -243,8 +306,8 @@ function drawRoute(path){
   line.setAttribute('class','route-line');
   overlay.appendChild(line);
 
-  // markers for start and end (drawn at actual node positions)
-  const s = getNode(path[0]), e = getNode(path[path.length-1]);
+  // markers for start and end (drawn at anchor positions)
+  const s = getNode(pathObj.start), e = getNode(pathObj.end);
   if (s){
     const p = scaleXYToOverlay(s.x, s.y);
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
@@ -310,12 +373,34 @@ function generateDirections(path){
   return out;
 }
 
+function findRoute(startId, endId, opts = {}){
+  const startAnchor = anchorToCorridorLike(startId);
+  const endAnchor = anchorToCorridorLike(endId);
+  const anchorStartNode = getNode(startAnchor);
+  const anchorEndNode = getNode(endAnchor);
+  const needVertical = anchorStartNode && anchorEndNode && anchorStartNode.floor !== anchorEndNode.floor;
+  const involvesOutside = OUTSIDE_NODE_IDS.has(startId) || OUTSIDE_NODE_IDS.has(endId) || anchorStartNode?.type === 'entrance' || anchorEndNode?.type === 'entrance';
+
+  // Corridor-first path between anchors
+  const corridorPath = aStar(startAnchor, endAnchor, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES, needVertical, involvesOutside });
+  if (!corridorPath || corridorPath.length === 0) return [];
+
+  return {
+    line: corridorPath,
+    start: startAnchor,
+    end: endAnchor,
+    originalStart: startId,
+    originalEnd: endId
+  };
+}
+
 /* --------------- Search (typeahead) --------------- */
 function filterNodesForSearch(query, role){ // role = 'start'|'end'
   query = (query||'').trim().toLowerCase();
   const includeCorridors = !!$('#includeCorridors').checked;
   return nodes.filter(n => {
     if (String(n.floor) !== String(currentFloor)) return false; // only show same-floor matches first
+    if ((nodeDegree[n.id] || 0) === 0) return false; // exclude isolated/unroutable
     if (!includeCorridors && (n.type||'').toLowerCase() === 'corridor') return false;
     const label = (n.name || n.id || '').toLowerCase();
     return label.includes(query);
@@ -362,15 +447,16 @@ $('#routeBtn').addEventListener('click', () => {
   const avoid = $('#accessibleToggle').checked;
   if (!startId || !endId) { alert('Please pick both start and destination from suggestions (click the result).'); return; }
   if (startId === endId) { alert('You are already there!'); return; }
+  if ((nodeDegree[startId] || 0) === 0 || (nodeDegree[endId] || 0) === 0) { alert('Selected point is not connected to the map data. Please choose another nearby point.'); return; }
 
-  const path = aStar(startId, endId, { avoidStairs: avoid });
-  if (!path || path.length===0){ alert('No route found — check edges.'); return; }
-  lastPath = path;
+  const pathObj = findRoute(startId, endId, { avoidStairs: avoid });
+  if (!pathObj || !pathObj.line || pathObj.line.length===0){ alert('No route found — check edges.'); return; }
+  lastPath = pathObj;
   // if path includes nodes on other floors, keep current floor as floor of start
-  drawRoute(path);
-  const directions = generateDirections(path);
+  drawMarkersForCurrentFloor();
+  const directions = generateDirections(pathObj.line);
   $('#directionsList').innerHTML = directions.map(s=>`<li>${s}</li>`).join('');
-  $('#summaryText').textContent = `${path.length} nodes • ${path.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
+  $('#summaryText').textContent = `${pathObj.line.length} nodes • ${pathObj.line.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
   // update URL params
   const params = new URLSearchParams();
   params.set('start', startId); params.set('end', endId); params.set('floor', getNode(startId).floor || currentFloor);
@@ -385,10 +471,13 @@ $('#clearBtn').addEventListener('click', ()=> {
   history.replaceState(null,'','/');
 });
 
-$('#copyLink').addEventListener('click', async ()=>{
+$('#copyLink').addEventListener('click', async ()=>{ 
   try { await navigator.clipboard.writeText(location.href); $('#shareSuccess').classList.remove('hidden'); setTimeout(()=>$('#shareSuccess').classList.add('hidden'),1300); } catch(e){ alert('Copy failed'); }
 });
 $('#printBtn').addEventListener('click', ()=> window.print());
+if ($('#minimalToggle')){
+  $('#minimalToggle').addEventListener('change', ()=> drawMarkersForCurrentFloor());
+}
 
 $('#prevFloor').addEventListener('click', ()=> {
   const idx = FLOOR_ORDER.indexOf(currentFloor);
