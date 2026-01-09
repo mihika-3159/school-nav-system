@@ -95,6 +95,13 @@
         <section class="lg:col-span-2 bg-white border rounded-2xl p-4 shadow-sm">
           <div class="flex items-start gap-6">
             <div class="flex-1">
+              <div class="flex items-center justify-between mb-3">
+                <div class="text-sm font-medium text-navy">Map view</div>
+                <label class="inline-flex items-center gap-2 text-xs text-slate-500">
+                  <input id="minimalToggle" type="checkbox" class="h-4 w-4" checked>
+                  <span>Minimal markers (stairs, lifts & active route)</span>
+                </label>
+              </div>
               <div class="relative map-frame rounded overflow-hidden bg-slate-50 border">
 
                 <!-- Image OR SVG will be inserted here dynamically -->
@@ -126,7 +133,9 @@
                     <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-navy inline-block"></span> Node</div>
                     <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:#ef4444"></span> Destination</div>
                     <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:var(--gold)"></span> Entrance / Lift</div>
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:var(--cyan)"></span> Active route node</div>
                   </div>
+                  <p class="text-[11px] text-slate-400 mt-2 leading-snug">Minimal mode hides regular rooms/corridor dots so the map stays clean. Toggle it off to see every node.</p>
                 </div>
               </div>
             </aside>
