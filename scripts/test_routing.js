@@ -57,28 +57,20 @@ function validatePath(path) {
   }
 }
 
-function dijkstra(start, goal, allowed) {
-  const dist = {};
+function findFirstPath(start, goal, allowed) {
   const prev = {};
   const visited = new Set();
-  const pq = [{ id: start, d: 0 }];
-  Object.keys(graph).forEach(k => { dist[k] = Infinity; });
-  dist[start] = 0;
-
-  while (pq.length) {
-    pq.sort((a, b) => a.d - b.d);
-    const current = pq.shift();
-    if (visited.has(current.id)) continue;
-    visited.add(current.id);
-    if (current.id === goal) break;
-    for (const e of graph[current.id] || []) {
+  const queue = [start];
+  visited.add(start);
+  while (queue.length) {
+    const current = queue.shift();
+    if (current === goal) break;
+    for (const e of graph[current] || []) {
       if (!allowed.has(e.to) && e.to !== goal) continue;
-      const tentative = dist[current.id] + e.weight;
-      if (tentative < dist[e.to]) {
-        dist[e.to] = tentative;
-        prev[e.to] = current.id;
-        pq.push({ id: e.to, d: tentative });
-      }
+      if (visited.has(e.to)) continue;
+      visited.add(e.to);
+      prev[e.to] = current;
+      queue.push(e.to);
     }
   }
 
@@ -98,7 +90,7 @@ function route(start, end, waypoints = []) {
   const anchors = [start, ...waypoints, end];
   let full = [];
   for (let i = 0; i < anchors.length - 1; i += 1) {
-    const segment = dijkstra(anchors[i], anchors[i + 1], allowed);
+    const segment = findFirstPath(anchors[i], anchors[i + 1], allowed);
     if (!segment.length) throw new Error(`No route for segment ${anchors[i]} -> ${anchors[i + 1]}`);
     full = full.length ? full.concat(segment.slice(1)) : segment;
   }

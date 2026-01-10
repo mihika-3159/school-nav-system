@@ -122,31 +122,22 @@ function validatePath(path){
   }
 }
 
-function dijkstra(start, goal, allowedNodes, opts = {}){
+function findFirstPath(start, goal, allowedNodes, opts = {}){
   const avoidStairs = !!opts.avoidStairs;
-  const dist = {};
   const prev = {};
-  const visited = new Set();
-  const pq = [];
-  Object.keys(graph).forEach(k => dist[k]=Infinity);
-  dist[start]=0;
-  pq.push({id:start, d:0});
+  const visited = new Set([start]);
+  const queue = [start];
 
-  while(pq.length){
-    pq.sort((a,b)=>a.d-b.d);
-    const current = pq.shift();
-    if (visited.has(current.id)) continue;
-    visited.add(current.id);
-    if (current.id === goal) break;
-    for (const e of graph[current.id] || []){
+  while(queue.length){
+    const current = queue.shift();
+    if (current === goal) break;
+    for (const e of graph[current] || []){
       if (avoidStairs && e.accessible === false) continue;
       if (!allowedNodes.has(e.to) && e.to !== goal) continue;
-      const tentative = dist[current.id] + e.weight;
-      if (tentative < dist[e.to]){
-        dist[e.to] = tentative;
-        prev[e.to] = current.id;
-        pq.push({id:e.to, d:tentative});
-      }
+      if (visited.has(e.to)) continue;
+      visited.add(e.to);
+      prev[e.to] = current;
+      queue.push(e.to);
     }
   }
 
@@ -177,7 +168,7 @@ function routeWithWaypoints(startId, endId, waypoints = [], opts = {}){
   for (let i=0;i<anchors.length-1;i++){
     const segStart = anchors[i];
     const segEnd = anchors[i+1];
-    const segment = dijkstra(segStart, segEnd, allowed, opts);
+    const segment = findFirstPath(segStart, segEnd, allowed, opts);
     if (!segment || segment.length === 0){
       throw new Error(`No route found for segment ${segStart} -> ${segEnd}`);
     }
