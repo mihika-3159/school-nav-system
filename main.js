@@ -30,6 +30,7 @@ const OUTSIDE_NODE_IDS = new Set([
 let nodes = []; // loaded nodes_all
 let edges = [];
 let graph = {};
+let edgeSet = new Set();
 let nodeDegree = {};
 let currentFloor = 'G';
 let lastPath = null; // { line: [], start: id, end: id, originalStart, originalEnd }
@@ -53,6 +54,7 @@ async function loadCSV(url){
 /* ---------------- graph ---------------- */
 function buildGraph(){
   graph = {};
+  edgeSet = new Set();
   nodeDegree = {};
   nodes.forEach(n => graph[n.id] = []);
   edges.forEach(e => {
@@ -65,6 +67,7 @@ function buildGraph(){
     graph[e.to].push({ to: e.from, weight: w, accessible: acc });
     nodeDegree[e.from] = (nodeDegree[e.from] || 0) + 1;
     nodeDegree[e.to] = (nodeDegree[e.to] || 0) + 1;
+    edgeSet.add(`${e.from}|${e.to}`);
   });
 }
 
@@ -100,6 +103,92 @@ function anchorToCorridorLike(nodeId){
   }
   const nearestCorr = nearestNodeOfType(nodeId, new Set(['corridor']));
   return nearestCorr ? nearestCorr.id : nodeId;
+}
+
+// Corridor-only graph + optional waypoints:
+// routeWithWaypoints(start, end, waypoints) computes shortest paths constrained to
+// corridor/lift/stair/entrance nodes plus start/end, concatenates segments, and validates edges.
+function isCorridorNode(node){
+  return ['corridor','stair','lift','entrance'].includes(node.type);
+}
+
+function validatePath(path){
+  for (let i=0; i<path.length-1; i++){
+    const key = `${path[i]}|${path[i+1]}`;
+    if (!edgeSet.has(key)){
+      console.error('Missing edge in path:', path[i], '->', path[i+1]);
+      throw new Error(`Invalid path: missing edge ${path[i]} -> ${path[i+1]}`);
+    }
+  }
+}
+
+function dijkstra(start, goal, allowedNodes, opts = {}){
+  const avoidStairs = !!opts.avoidStairs;
+  const dist = {};
+  const prev = {};
+  const visited = new Set();
+  const pq = [];
+  Object.keys(graph).forEach(k => dist[k]=Infinity);
+  dist[start]=0;
+  pq.push({id:start, d:0});
+
+  while(pq.length){
+    pq.sort((a,b)=>a.d-b.d);
+    const current = pq.shift();
+    if (visited.has(current.id)) continue;
+    visited.add(current.id);
+    if (current.id === goal) break;
+    for (const e of graph[current.id] || []){
+      if (avoidStairs && e.accessible === false) continue;
+      if (!allowedNodes.has(e.to) && e.to !== goal) continue;
+      const tentative = dist[current.id] + e.weight;
+      if (tentative < dist[e.to]){
+        dist[e.to] = tentative;
+        prev[e.to] = current.id;
+        pq.push({id:e.to, d:tentative});
+      }
+    }
+  }
+
+  if (!prev[goal] && start !== goal) return [];
+  const path = [];
+  let cur = goal;
+  while(cur){
+    path.push(cur);
+    cur = prev[cur];
+    if (cur === start){ path.push(cur); break; }
+  }
+  return path.reverse();
+}
+
+function buildAllowedNodes(startId, endId, waypoints = []){
+  const allowed = new Set();
+  nodes.forEach(n => { if (isCorridorNode(n)) allowed.add(n.id); });
+  allowed.add(startId);
+  allowed.add(endId);
+  waypoints.forEach(w => allowed.add(w));
+  return allowed;
+}
+
+function routeWithWaypoints(startId, endId, waypoints = [], opts = {}){
+  const anchors = [startId, ...waypoints, endId];
+  const allowed = buildAllowedNodes(startId, endId, waypoints);
+  let full = [];
+  for (let i=0;i<anchors.length-1;i++){
+    const segStart = anchors[i];
+    const segEnd = anchors[i+1];
+    const segment = dijkstra(segStart, segEnd, allowed, opts);
+    if (!segment || segment.length === 0){
+      throw new Error(`No route found for segment ${segStart} -> ${segEnd}`);
+    }
+    if (full.length){
+      full = full.concat(segment.slice(1));
+    } else {
+      full = segment;
+    }
+  }
+  validatePath(full);
+  return full;
 }
 
 /* ---------------- A* ---------------- */
@@ -385,7 +474,7 @@ function generateDirections(path){
   return out;
 }
 
-function findRoute(startId, endId, opts = {}){
+function findRoute(startId, endId, waypoints = [], opts = {}){
   const startAnchor = anchorToCorridorLike(startId);
   const endAnchor = anchorToCorridorLike(endId);
   const anchorStartNode = getNode(startAnchor);
@@ -393,16 +482,23 @@ function findRoute(startId, endId, opts = {}){
   const needVertical = anchorStartNode && anchorEndNode && anchorStartNode.floor !== anchorEndNode.floor;
   const involvesOutside = OUTSIDE_NODE_IDS.has(startId) || OUTSIDE_NODE_IDS.has(endId) || anchorStartNode?.type === 'entrance' || anchorEndNode?.type === 'entrance';
 
-  // Corridor-first path between anchors
-  const corridorPath = aStar(startAnchor, endAnchor, { ...opts, allowedTypes: CORRIDOR_PATH_TYPES, needVertical, involvesOutside });
+  const corridorPath = routeWithWaypoints(startAnchor, endAnchor, waypoints, { ...opts, needVertical, involvesOutside });
   if (!corridorPath || corridorPath.length === 0) return [];
+
+  const fullPath = [startId];
+  if (startAnchor !== startId) fullPath.push(startAnchor);
+  corridorPath.forEach((n,i) => {
+    if (i===0 && n === fullPath[fullPath.length-1]) return;
+    fullPath.push(n);
+  });
+  if (endAnchor !== endId) fullPath.push(endId);
+  validatePath(fullPath);
 
   return {
     line: corridorPath,
-    start: startAnchor,
-    end: endAnchor,
-    originalStart: startId,
-    originalEnd: endId
+    full: fullPath,
+    start: startId,
+    end: endId
   };
 }
 
@@ -461,14 +557,14 @@ $('#routeBtn').addEventListener('click', () => {
   if (startId === endId) { alert('You are already there!'); return; }
   if ((nodeDegree[startId] || 0) === 0 || (nodeDegree[endId] || 0) === 0) { alert('Selected point is not connected to the map data. Please choose another nearby point.'); return; }
 
-  const pathObj = findRoute(startId, endId, { avoidStairs: avoid });
+  const pathObj = findRoute(startId, endId, [], { avoidStairs: avoid });
   if (!pathObj || !pathObj.line || pathObj.line.length===0){ alert('No route found — check edges.'); return; }
   lastPath = pathObj;
   // if path includes nodes on other floors, keep current floor as floor of start
   drawMarkersForCurrentFloor();
-  const directions = generateDirections(pathObj.line);
+  const directions = generateDirections(pathObj.full);
   $('#directionsList').innerHTML = directions.map(s=>`<li>${s}</li>`).join('');
-  $('#summaryText').textContent = `${pathObj.line.length} nodes • ${pathObj.line.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
+  $('#summaryText').textContent = `${pathObj.line.length} corridor nodes • ${pathObj.line.map(id=>getNode(id).floor).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}`;
   // update URL params
   const params = new URLSearchParams();
   params.set('start', startId); params.set('end', endId); params.set('floor', getNode(startId).floor || currentFloor);
