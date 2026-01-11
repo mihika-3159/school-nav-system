@@ -4,7 +4,7 @@ import os
 from itertools import combinations
 
 # ---------------- CONFIG ----------------
-NODE_DIR = "school-nav-data/nodes"
+NODE_DIR = "nodes"
 OUTPUT_EDGES = "school-nav-data/edges_all.csv"
 
 floors = {
@@ -15,7 +15,8 @@ floors = {
 }
 
 # maximum distance for same-floor connections
-MAX_DIST = 100
+# maximum distance for same-floor connections
+MAX_DIST = 45
 # number of nearest corridor nodes to connect to
 ROOM_NEIGHBORS = 2
 CORRIDOR_NEIGHBORS = 2
@@ -69,8 +70,13 @@ for floor, df in nodes.groupby("floor"):
 
     # Corridors → nearest corridors
     for c in corridors:
+        # Filter strictly by distance first to avoid wall hacks
+        valid_neighbors = [
+            o for o in corridors 
+            if o["id"] != c["id"] and distance(c, o) <= MAX_DIST
+        ]
         nearest = sorted(
-            [o for o in corridors if o["id"] != c["id"]],
+            valid_neighbors,
             key=lambda o: distance(c, o)
         )[:CORRIDOR_NEIGHBORS]
         for n in nearest:
@@ -80,7 +86,7 @@ for floor, df in nodes.groupby("floor"):
     # Stairs/Lifts → nearest corridors
     for s in stairs + lifts:
         nearest = sorted(
-            [c for c in corridors],
+            [c for c in corridors if distance(s, c) <= MAX_DIST + 20], # slightly leeway for stairs
             key=lambda c: distance(s, c)
         )[:1]
         for n in nearest:

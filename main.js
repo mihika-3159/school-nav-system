@@ -220,7 +220,14 @@ function drawMarkersForCurrentFloor() {
   const overlay = $('#overlay');
   overlay.innerHTML = '';
 
-  const floorNodes = nodes.filter(n => String(n.floor) === String(currentFloor));
+  // Filter nodes: Only show stair, lift, entrance
+  const floorNodes = nodes.filter(n => {
+    if (String(n.floor) !== String(currentFloor)) return false;
+    const t = (n.type || '').toLowerCase();
+    // Show stairs, lifts, entrances
+    return t === 'stair' || t === 'lift' || t === 'entrance';
+  });
+
   floorNodes.forEach(n => {
     // by default exclude corridor from being prominent; still drawn but not in search (config)
     const { cx, cy } = scaleXYToOverlay(n.x, n.y);
@@ -232,7 +239,14 @@ function drawMarkersForCurrentFloor() {
     // circle
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('r', 8);
-    circle.setAttribute('fill', n.type === 'lift' || n.type === 'entrance' ? 'var(--gold)' : 'var(--navy)');
+
+    // Color coding
+    let fill = 'var(--navy)';
+    if (n.type === 'stair') fill = 'orange';
+    if (n.type === 'lift') fill = 'purple';
+    if (n.type === 'entrance') fill = 'green';
+
+    circle.setAttribute('fill', fill);
     circle.setAttribute('class', 'marker');
     g.appendChild(circle);
 
