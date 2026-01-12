@@ -106,32 +106,26 @@ button:focus {
   background-size: 20px 20px;
 }
 
-/* Robustly hide irritating internal SVG dots/labels from source files */
-#mapBase svg g circle,
-#mapBase svg g ellipse,
-#mapBase svg g text,
-#mapBase svg circle,
-#mapBase svg ellipse,
-#mapBase svg text,
-#mapBase.inlined-svg-mode svg g,
-#mapBase.inlined-svg-mode svg circle,
-#mapBase.inlined-svg-mode svg ellipse,
-#mapBase.inlined-svg-mode svg text,
-#mapBase.inlined-svg-mode svg path {
-  display: none !important;
-}
-
-/* Ensure only the floor plan image is allowed to show in the base container */
-#mapBase.inlined-svg-mode svg image {
-  display: block !important;
-}
-
-/* Ensure the floor plan image is visible and styled */
+/* Ensure the floor plan (image or canvas) is visible and styled */
 #mapBase img,
+#mapBase canvas,
 #mapBase svg image {
   filter: grayscale(100%) brightness(1.1) contrast(1.1);
   mix-blend-mode: multiply;
   opacity: 0.85;
+}
+
+/* Hide residual SVG vector elements if fallback occurs */
+#mapBase svg g,
+#mapBase svg circle,
+#mapBase svg ellipse,
+#mapBase svg text,
+#mapBase svg path {
+  display: none !important;
+}
+
+#mapBase svg image {
+  display: block !important;
 }
 
 /* route animation */

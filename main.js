@@ -25,6 +25,14 @@ let lastPath = null;
 let mapBaseIsSvg = false; // computed at load
 let mapNaturalSize = { width: 1000, height: 800 }; // fallback, updated if image/svg viewbox known
 
+// PDF floor mapping: Keys match FLOOR_ORDER, Values are 1-based page indices
+const PDF_URL = 'school-nav-data/pdf/floorplans.pdf';
+const PDF_PAGE_MAP = { 'G': 1, '1': 2, '2': 3, '3': 4 };
+// Configure PDF.js worker
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
 // helpers
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -156,6 +164,42 @@ async function loadMapBase(floorKey) {
   container.innerHTML = '';
 
   try {
+    // If we have a special PDF mapping for this floor, prefer PDF rendering
+    if (PDF_PAGE_MAP[floorKey] && typeof pdfjsLib !== 'undefined') {
+      const loadingTask = pdfjsLib.getDocument(PDF_URL);
+      const pdf = await loadingTask.promise;
+      const pageNum = PDF_PAGE_MAP[floorKey];
+      const page = await pdf.getPage(pageNum);
+
+      // We render at a higher scale (e.g. 2.0 or 3.0) for crispiness, but
+      // the coordinates in nodes.csv must map to the UN-SCALED ViewPort size.
+      const scale = 2.5;
+      const viewport = page.getViewport({ scale: scale });
+
+      // Update natural size for marker scaling (using un-scaled viewport dimensions)
+      const baseViewport = page.getViewport({ scale: 1.0 });
+      mapNaturalSize = { width: baseViewport.width, height: baseViewport.height };
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.objectFit = 'contain';
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+
+      container.appendChild(canvas);
+      drawMarkersForCurrentFloor();
+      return;
+    }
+
     const res = await fetch(url);
     if (!res.ok) throw new Error('not found');
     const text = await res.text();
