@@ -38,15 +38,34 @@ def connect(a, b, accessible="true"):
     }
 
 def load_floor_image(svg_filename):
-    """Parses SVG to find embedded base64 image and returns PIL Image."""
+    """Parses SVG to find embedded base64 image and returns PIL Image and SVG dimensions."""
     path = os.path.join(SVG_DIR, svg_filename)
     if not os.path.exists(path):
         print(f"⚠️ Missing SVG {path}")
-        return None
+        return None, (1, 1)
     
     try:
         tree = ET.parse(path)
         root = tree.getroot()
+        
+        # Get SVG dimensions from viewBox or width/height attributes
+        # viewBox format: "min-x min-y width height"
+        viewbox = root.get('viewBox')
+        svg_w, svg_h = 1000, 1000 # default fallback
+        
+        if viewbox:
+            parts = viewbox.split()
+            if len(parts) == 4:
+                svg_w = float(parts[2])
+                svg_h = float(parts[3])
+        else:
+            w_str = root.get('width')
+            h_str = root.get('height')
+            if w_str and h_str:
+                # Remove 'px' or other units if present
+                svg_w = float("".join(c for c in w_str if c.isdigit() or c == '.'))
+                svg_h = float("".join(c for c in h_str if c.isdigit() or c == '.'))
+
         # Namespaces often used in Inkscape/Standard SVGs
         ns = {
             'svg': 'http://www.w3.org/2000/svg', 
@@ -74,57 +93,68 @@ def load_floor_image(svg_filename):
                     # Ensure RGB or Grayscale
                     if img.mode not in ('RGB', 'L'):
                         img = img.convert('RGB')
-                    return img
+                    return img, (svg_w, svg_h)
                 except Exception as b64_err:
                     print(f"Failed to decode base64 image in {svg_filename}: {b64_err}")
     except Exception as e:
         print(f"Error parsing SVG {path}: {e}")
     
-    return None
+    return None, (1, 1)
 
-def has_collision(a, b, image, collision_desc="wall"):
+def has_collision(a, b, image, scale=(1, 1), collision_desc="wall"):
     """
     Checks if the line segment between a and b intersects with dark pixels in the image.
+    Scale tuple (scale_x, scale_y) converts node coords to pixel coords.
     Returns True if collision detected.
     """
     if image is None: 
         return False
     
-    x1, y1 = int(a["x"]), int(a["y"])
-    x2, y2 = int(b["x"]), int(b["y"])
+    sx, sy = scale
+    x1, y1 = int(a["x"] * sx), int(a["y"] * sy)
+    x2, y2 = int(b["x"] * sx), int(b["y"] * sy)
     
     # Check bounds
     w, h = image.size
-    if not (0 <= x1 < w and 0 <= y1 < h): return False
-    if not (0 <= x2 < w and 0 <= y2 < h): return False
+    # Clamp is safer than rejecting? No, if out of bounds, it's not a valid map area usually.
+    # But let's reject if fully out.
+    if (x1 < 0 or x1 >= w or y1 < 0 or y1 >= h) and (x2 < 0 or x2 >= w or y2 < 0 or y2 >= h):
+        return False
 
     # Get sample points along the line
-    points = []
     dx = abs(x2 - x1)
     dy = abs(y2 - y1)
-    sx = 1 if x1 < x2 else -1
-    sy = 1 if y1 < y2 else -1
-    err = dx - dy
-    
-    curr_x, curr_y = x1, y1
     
     # Bresenham's algo to generate points
+    # Standard implementation
+    steep = abs(dy) > abs(dx)
+    if steep:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+    
+    if x1 > x2:
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+        
+    dx = x2 - x1
+    dy = abs(y2 - y1)
+    error = dx / 2.0
+    ystep = 1 if y1 < y2 else -1
+    y = y1
+    
     path_pixels = []
-    while True:
-        path_pixels.append((curr_x, curr_y))
-        if curr_x == x2 and curr_y == y2:
-            break
-        e2 = 2 * err
-        if e2 > -dy:
-            err -= dy
-            curr_x += sx
-        if e2 < dx:
-            err += dx
-            curr_y += sy
+    for x in range(x1, x2 + 1):
+        coord = (y, x) if steep else (x, y)
+        path_pixels.append(coord)
+        error -= dy
+        if error < 0:
+            y += ystep
+            error += dx
 
     # Check pixels for darkness (walls)
     # Skip start and end slightly to avoid the node marker itself if present/dark
-    margin = 2
+    # We rely on image resolution being high enough that a few pixels skip doesn't miss walls
+    margin = 5 # skip 5 pixels at ends
     if len(path_pixels) <= margin * 2:
         check_pixels = path_pixels
     else:
@@ -132,8 +162,8 @@ def has_collision(a, b, image, collision_desc="wall"):
         
     consecutive_hits = 0
     # Threshold for "darkness". 0 is black, 255 is white.
-    # We assume walls are significantly dark.
-    DARK_THRESHOLD = 80 
+    # Walls are black lines. 
+    DARK_THRESHOLD = 100 
     
     pixels = image.load()
     
@@ -144,14 +174,13 @@ def has_collision(a, b, image, collision_desc="wall"):
             if isinstance(val, tuple):
                 # Averaging RGB
                 brightness = sum(val[:3]) / 3
-                # If checking alpha: val[3] if len > 3
             else:
                 brightness = val
             
             if brightness < DARK_THRESHOLD:
                 consecutive_hits += 1
                 # If we see a few consecutive dark pixels, treat as wall
-                if consecutive_hits >= 2:
+                if consecutive_hits >= 3: # 3 pixels thick wall check
                     return True
             else:
                 consecutive_hits = 0
@@ -176,9 +205,16 @@ for floor_key, file_info in floors.items():
     
     # Load floor plan image for collision checking
     print(f"Loading image for {floor_key} from {svg_file}...")
-    floor_image = load_floor_image(svg_file)
+    floor_image, svg_dim = load_floor_image(svg_file)
+    
+    scale_factors = (1, 1)
     if floor_image:
-        print(f"  Image loaded: {floor_image.size} mode={floor_image.mode}")
+        img_w, img_h = floor_image.size
+        svg_w, svg_h = svg_dim
+        scale_x = img_w / svg_w if svg_w else 1
+        scale_y = img_h / svg_h if svg_h else 1
+        scale_factors = (scale_x, scale_y)
+        print(f"  Image: {img_w}x{img_h} px, SVG: {svg_w}x{svg_h} units. Scale: {scale_x:.2f}, {scale_y:.2f}")
     else:
         print("  ⚠️ No image loaded, wall collision detection will be skipped for this floor.")
 
@@ -201,7 +237,7 @@ for floor_key, file_info in floors.items():
                 break # heuristic cut-off
             
             # Check collision
-            if has_collision(r, cand, floor_image):
+            if has_collision(r, cand, floor_image, scale=scale_factors):
                 continue
                 
             all_edges.append(connect(r, cand))
@@ -221,11 +257,8 @@ for floor_key, file_info in floors.items():
             dist = distance(c, o)
             if dist <= MAX_DIST:
                 # Check collision (Line of Sight)
-                if not has_collision(c, o, floor_image):
+                if not has_collision(c, o, floor_image, scale=scale_factors):
                      all_edges.append(connect(c, o))
-                     # We add undirected edges both ways in loop, or just one way and verify later?
-                     # The loop structure (for i, for o) will add c->o and o->c eventually. 
-                     # But duplication is fine, dropping later.
 
     # 3. Stairs/Lifts → Nearest Corridors
     for s in stairs + lifts:
@@ -236,13 +269,13 @@ for floor_key, file_info in floors.items():
             if distance(s, cand) > MAX_DIST + 20:
                 break
                 
-            if has_collision(s, cand, floor_image):
+            if has_collision(s, cand, floor_image, scale=scale_factors):
                 continue
             
             all_edges.append(connect(s, cand))
             all_edges.append(connect(cand, s))
             connected_count += 1
-            if connected_count >= 1: # at least 1, maybe 2?
+            if connected_count >= 1: 
                 break
                 
     # Add to global nodes list for vertical processing
