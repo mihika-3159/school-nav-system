@@ -1,46 +1,131 @@
-:root{
+:root {
   --navy: #06283D;
   --gold: #C89B3C;
   --muted: #6b7280;
 }
-body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #fff; color: #0f172a;}
-.text-navy { color: var(--navy); }
-.bg-navy { background: var(--navy); }
-.bg-gold { background: var(--gold); color: #fff; }
-.gold { color: var(--gold); }
-button:focus { outline: 3px solid rgba(200,155,60,0.15); outline-offset: 2px; }
-.map-frame { aspect-ratio: 4/3; min-height: 420px; max-height: 78vh; position:relative; }
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #fff;
+  color: #0f172a;
+}
+
+.text-navy {
+  color: var(--navy);
+}
+
+.bg-navy {
+  background: var(--navy);
+}
+
+.bg-gold {
+  background: var(--gold);
+  color: #fff;
+}
+
+.gold {
+  color: var(--gold);
+}
+
+button:focus {
+  outline: 3px solid rgba(200, 155, 60, 0.15);
+  outline-offset: 2px;
+}
+
+.map-frame {
+  aspect-ratio: 4/3;
+  min-height: 420px;
+  max-height: 78vh;
+  position: relative;
+}
 
 /* search results */
-#startResults, #endResults {
-  border: 1px solid #eef2ff; padding: 4px; border-radius: 6px;
+#startResults,
+#endResults {
+  border: 1px solid #eef2ff;
+  padding: 4px;
+  border-radius: 6px;
 }
-.result-item { padding: 6px 8px; border-radius:6px; cursor:pointer; }
-.result-item:hover { background: #f8fafc; }
-.result-name { font-weight:500; color: #06283D; }
-.result-meta { font-size: 11px; color: #6b7280; }
+
+.result-item {
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.result-item:hover {
+  background: #f8fafc;
+}
+
+.result-name {
+  font-weight: 500;
+  color: #06283D;
+}
+
+.result-meta {
+  font-size: 11px;
+  color: #6b7280;
+}
 
 /* overlay markers */
-.marker { cursor:pointer; stroke:white; stroke-width:1.5px; }
-.marker-label { pointer-events:none; font-size:12px; font-weight:600; fill:#06283D; transform: translateY(-10px); }
+.marker {
+  cursor: pointer;
+  stroke: white;
+  stroke-width: 1.5px;
+}
+
+.marker-label {
+  pointer-events: none;
+  font-size: 12px;
+  font-weight: 600;
+  fill: #06283D;
+  transform: translateY(-10px);
+}
 
 /* route style */
-.route-line { fill:none; stroke:var(--gold); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
-.route-shadow { fill:none; stroke:rgba(2,6,23,0.06); stroke-width:12; stroke-linecap:round; }
+.route-line {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
-/* map image styling */
-#mapBase svg image {
-  filter: grayscale(100%) brightness(1.05) contrast(0.9);
-  mix-blend-mode: multiply;
+.route-shadow {
+  fill: none;
+  stroke: rgba(2, 6, 23, 0.06);
+  stroke-width: 12;
+  stroke-linecap: round;
 }
 
 #mapBase {
   background-color: #fafafa;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Hide the irritating internal SVG dots/labels from source files */
+#mapBase svg g circle,
+#mapBase svg g ellipse,
+#mapBase svg g text,
+#mapBase svg circle,
+#mapBase svg ellipse,
+#mapBase svg text {
+  display: none !important;
+}
+
+/* Ensure the floor plan image is visible and styled */
+#mapBase svg image {
+  filter: grayscale(100%) brightness(1.1) contrast(0.95);
+  mix-blend-mode: multiply;
+  opacity: 0.8;
 }
 
 /* route animation */
 .route-line {
-  fill:none;
+  fill: none;
   stroke: var(--gold);
   stroke-width: 6;
   stroke-linecap: round;
@@ -50,11 +135,15 @@ button:focus { outline: 3px solid rgba(200,155,60,0.15); outline-offset: 2px; }
 }
 
 @keyframes flow {
-  from { stroke-dashoffset: 24; }
-  to { stroke-dashoffset: 0; }
+  from {
+    stroke-dashoffset: 24;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .route-marker {
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
-
