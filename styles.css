@@ -117,10 +117,11 @@ button:focus {
 }
 
 /* Ensure the floor plan image is visible and styled */
+#mapBase img,
 #mapBase svg image {
-  filter: grayscale(100%) brightness(1.1) contrast(0.95);
+  filter: grayscale(100%) brightness(1.1) contrast(1.1);
   mix-blend-mode: multiply;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* route animation */

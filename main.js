@@ -154,34 +154,50 @@ async function loadMapBase(floorKey) {
   const url = FLOOR_FILES[floorKey];
   const container = $('#mapBase');
   container.innerHTML = '';
-  mapBaseIsSvg = false;
 
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error('not found');
     const text = await res.text();
 
-    // Heuristic: if it starts with <svg treat as svg, else try image
     if (text.trim().startsWith('<svg')) {
-      mapBaseIsSvg = true;
-      container.innerHTML = text;
-      // try to read viewBox to scale coordinates correctly
-      const svg = container.querySelector('svg');
-      if (svg) {
-        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        const vb = svg.getAttribute('viewBox');
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(text, 'image/svg+xml');
+      const svgEl = svgDoc.querySelector('svg');
+
+      if (svgEl) {
+        // 1. Get scale info
+        const vb = svgEl.getAttribute('viewBox');
         if (vb) {
           const parts = vb.split(/\s+/).map(Number);
           if (parts.length === 4) mapNaturalSize = { width: parts[2], height: parts[3] };
         } else {
-          // fallback to width/height attributes
-          const w = parseFloat(svg.getAttribute('width')) || mapNaturalSize.width;
-          const h = parseFloat(svg.getAttribute('height')) || mapNaturalSize.height;
+          const w = parseFloat(svgEl.getAttribute('width')) || mapNaturalSize.width;
+          const h = parseFloat(svgEl.getAttribute('height')) || mapNaturalSize.height;
           mapNaturalSize = { width: w, height: h };
+        }
+
+        // 2. Extract image
+        const innerImg = svgEl.querySelector('image');
+        const imgSrc = innerImg ? (innerImg.getAttribute('xlink:href') || innerImg.getAttribute('href')) : null;
+
+        if (imgSrc) {
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = `Floor ${floorKey}`;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'contain';
+          img.onload = () => { drawMarkersForCurrentFloor(); };
+          container.appendChild(img);
+        } else {
+          // Fallback: inject raw SVG
+          container.innerHTML = text;
+          setTimeout(drawMarkersForCurrentFloor, 50);
         }
       }
     } else {
-      // treat as image binary: create an <img> and set src to url
+      // It's a direct image file
       const img = document.createElement('img');
       img.src = url;
       img.alt = `Floor ${floorKey}`;
@@ -190,16 +206,13 @@ async function loadMapBase(floorKey) {
       img.style.objectFit = 'contain';
       img.onload = () => {
         mapNaturalSize = { width: img.naturalWidth || 1000, height: img.naturalHeight || 800 };
-        // after we know natural size, redraw markers
         drawMarkersForCurrentFloor();
       };
       container.appendChild(img);
     }
-    // after base loaded, draw markers
-    setTimeout(() => drawMarkersForCurrentFloor(), 150);
   } catch (err) {
-    console.warn('Map base not found:', url);
-    container.innerHTML = `<div class="text-sm text-red-500 p-4">Map not found: ${url}</div>`;
+    console.warn('Map base load error:', url, err);
+    container.innerHTML = `<div class="text-sm text-red-500 p-4">Map error: ${url}</div>`;
   }
 }
 

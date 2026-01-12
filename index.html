@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -10,6 +11,7 @@
 
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-white text-slate-900 antialiased">
 
   <div class="min-h-screen flex items-start justify-center p-6">
@@ -17,7 +19,8 @@
       <header class="flex items-center justify-between mb-6">
         <div>
           <h1 class="text-3xl font-semibold text-navy">School Navigator</h1>
-          <p class="mt-1 text-sm text-slate-500">Type to search start & destination, pick a map, and we’ll route you.</p>
+          <p class="mt-1 text-sm text-slate-500">Type to search start & destination, pick a map, and we’ll route you.
+          </p>
         </div>
         <!-- Palette removed -->
       </header>
@@ -28,16 +31,18 @@
           <div class="bg-white border rounded-2xl p-5 shadow-sm">
             <label class="block text-xs text-slate-500">Start</label>
             <input id="startSearch" type="search" placeholder="Type start (e.g., Reception)" autocomplete="off"
-                   class="mt-2 w-full rounded-lg border px-3 py-2 text-sm" />
+              class="mt-2 w-full rounded-lg border px-3 py-2 text-sm" />
             <div id="startResults" class="mt-1 max-h-40 overflow-auto text-sm"></div>
 
             <label class="block text-xs text-slate-500 mt-4">Destination</label>
             <input id="endSearch" type="search" placeholder="Type destination (e.g., Room 101)" autocomplete="off"
-                   class="mt-2 w-full rounded-lg border px-3 py-2 text-sm" />
+              class="mt-2 w-full rounded-lg border px-3 py-2 text-sm" />
             <div id="endResults" class="mt-1 max-h-40 overflow-auto text-sm"></div>
 
             <div class="flex items-center gap-3 mt-4">
-              <button id="routeBtn" class="flex-1 bg-navy text-white py-2 rounded-lg text-sm font-medium shadow-sm hover:opacity-95">Show route</button>
+              <button id="routeBtn"
+                class="flex-1 bg-navy text-white py-2 rounded-lg text-sm font-medium shadow-sm hover:opacity-95">Show
+                route</button>
               <button id="clearBtn" class="px-4 py-2 border rounded-lg text-sm">Clear</button>
             </div>
 
@@ -82,7 +87,8 @@
               <div class="relative map-frame rounded overflow-hidden bg-slate-50 border">
 
                 <!-- Image OR SVG will be inserted here dynamically -->
-                <div id="mapBase" class="absolute inset-0 w-full h-full flex items-center justify-center bg-white"></div>
+                <div id="mapBase" class="absolute inset-0 w-full h-full flex items-center justify-center bg-white">
+                </div>
 
                 <!-- overlay svg for route + markers -->
                 <svg id="overlay" class="absolute inset-0 w-full h-full pointer-events-auto"></svg>
@@ -99,9 +105,16 @@
                 <div class="bg-white rounded-lg border p-3 text-sm text-slate-600">
                   <div class="font-medium text-slate-800 mb-1">Legend</div>
                   <div class="flex flex-col gap-2 text-xs">
-                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-navy inline-block"></span> Node</div>
-                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:#ef4444"></span> Destination</div>
-                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:var(--gold)"></span> Entrance / Lift</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full"
+                        style="background:var(--navy)"></span> Start Point</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full"
+                        style="background:#ef4444"></span> Destination</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full"
+                        style="background:orange"></span> Stair</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full"
+                        style="background:purple"></span> Lift</div>
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full"
+                        style="background:green"></span> Entrance</div>
                   </div>
                 </div>
               </div>
@@ -118,4 +131,5 @@
 
   <script src="main.js"></script>
 </body>
+
 </html>
