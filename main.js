@@ -9,11 +9,17 @@
 
 const FLOOR_ORDER = ['G', '1', '2', '3'];
 const FLOOR_FILES = {
-  'G': 'school-nav-data/images/floor_G.png',
-  '1': 'school-nav-data/images/floor_1.png',
-  '2': 'school-nav-data/images/floor_2.png',
-  '3': 'school-nav-data/images/floor_3.png'
+  'G': 'school-nav-data/pdf/floorplans.pdf',
+  '1': 'school-nav-data/pdf/floorplans.pdf',
+  '2': 'school-nav-data/pdf/floorplans.pdf',
+  '3': 'school-nav-data/pdf/floorplans.pdf'
 };
+const PDF_PAGE_MAP = { 'G': 1, '1': 2, '2': 3, '3': 4 };
+
+// Configure PDF.js worker
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
 const NODES_CSV = 'school-nav-data/nodes_all.csv';
 const EDGES_CSV = 'school-nav-data/edges_all.csv';
 
@@ -22,7 +28,8 @@ let edges = [];
 let graph = {};
 let currentFloor = 'G';
 let lastPath = null;
-let mapNaturalSize = { width: 680.64, height: 480 }; // Fixed to match nodes dataset precisely
+let mapNaturalSize = { width: 680.64, height: 480 }; // Default SVG coordinate space
+let isPdfMode = false;
 
 // helpers
 const $ = s => document.querySelector(s);
@@ -150,11 +157,43 @@ function route(start, end, opts = {}) {
 
 /* ---------------- Map base load (svg or image) ---------------- */
 async function loadMapBase(floorKey) {
-  const url = FLOOR_FILES[floorKey];
   const container = $('#mapBase');
   container.innerHTML = '';
+  isPdfMode = false;
 
   try {
+    // PDF Rendering Path
+    if (PDF_PAGE_MAP[floorKey] && typeof pdfjsLib !== 'undefined') {
+      const loadingTask = pdfjsLib.getDocument(FLOOR_FILES[floorKey]);
+      const pdf = await loadingTask.promise;
+      const pageNum = PDF_PAGE_MAP[floorKey];
+      const page = await pdf.getPage(pageNum);
+
+      // Render for display (crispness)
+      const scale = 2.0;
+      const viewport = page.getViewport({ scale });
+
+      // Update natural dimensions from PDF metadata
+      const baseViewport = page.getViewport({ scale: 1.0 });
+      mapNaturalSize = { width: baseViewport.width, height: baseViewport.height };
+      isPdfMode = true;
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.objectFit = 'contain';
+
+      await page.render({ canvasContext: context, viewport }).promise;
+      container.appendChild(canvas);
+      drawMarkersForCurrentFloor();
+      return;
+    }
+
+    // Raster Image Fallback (e.g. if PDF fails or not mapped)
+    const url = FLOOR_FILES[floorKey];
     const img = document.createElement('img');
     img.src = url;
     img.alt = `Floor ${floorKey}`;
@@ -162,13 +201,14 @@ async function loadMapBase(floorKey) {
     img.style.height = '100%';
     img.style.objectFit = 'contain';
     img.onload = () => {
-      // Natural size is locked to 680.64 x 480 for coordinate alignment
+      // If we are using old images, they might have different sizes, 
+      // but the core nodes are mapped to 680.64x480.
       drawMarkersForCurrentFloor();
     };
     container.appendChild(img);
   } catch (err) {
-    console.warn('Map base load error:', url, err);
-    container.innerHTML = `<div class="text-sm text-red-500 p-4">Map error: ${url}</div>`;
+    console.warn('Map base load error:', floorKey, err);
+    container.innerHTML = `<div class="text-sm text-red-500 p-4">Map error: ${err.message}</div>`;
   }
 }
 
@@ -176,13 +216,23 @@ async function loadMapBase(floorKey) {
 function clearOverlay() { const o = $('#overlay'); while (o.firstChild) o.removeChild(o.firstChild); }
 
 function scaleXYToOverlay(x, y) {
-  // nodes.csv coordinates are assumed to be in same coordinate space as the map file (SVG viewBox or image pixels)
-  // overlay svg has width/height in CSS; mapNaturalSize stores source pixel space.
   const overlay = $('#overlay');
   const rect = overlay.getBoundingClientRect();
+
+  // If we are in PDF mode, we need to map the CSV's SVG coordinate space (680.64x480)
+  // to the PDF's point space (510x360).
+  // Scaling ratio: 0.75
+  let targetX = x;
+  let targetY = y;
+
+  if (isPdfMode) {
+    targetX = x * (mapNaturalSize.width / 680.64);
+    targetY = y * (mapNaturalSize.height / 480);
+  }
+
   const scaleX = rect.width / mapNaturalSize.width;
   const scaleY = rect.height / mapNaturalSize.height;
-  return { cx: x * scaleX, cy: y * scaleY };
+  return { cx: targetX * scaleX, cy: targetY * scaleY };
 }
 
 function drawMarkersForCurrentFloor() {

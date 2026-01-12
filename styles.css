@@ -106,8 +106,9 @@ button:focus {
   background-size: 20px 20px;
 }
 
-/* Standard styling for the clean floor plan images */
-#mapBase img {
+/* Standard styling for the floor plan background (images or PDF canvas) */
+#mapBase img,
+#mapBase canvas {
   filter: grayscale(100%) brightness(1.1) contrast(1.1);
   mix-blend-mode: multiply;
   opacity: 0.85;
